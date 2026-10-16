@@ -108,10 +108,10 @@ final class WordsAndBandsTest extends TestCase
         self::assertCount(3, $cells['features']);
         $first = $cells['features'][0];
         self::assertSame([
-            'mm' => 3.0, 'pct' => 80.0, 'band' => 'near', 'wet' => false, 'label' => '3.0 mm · 80 % of normal',
+            'mm' => 3.0, 'pct' => 80.0, 'band' => 'near', 'step' => 2, 'wet' => false, 'label' => '3.0 mm · 80 % of normal',
         ], $first['properties']);
         self::assertSame(['type' => 'Polygon', 'coordinates' => [[[10.0, -1.1], [10.1, -1.1], [10.1, -1.0], [10.0, -1.0], [10.0, -1.1]]]], $first['geometry']);
-        self::assertSame(['mm' => 12.0, 'pct' => 160.0, 'band' => 'much-wetter', 'wet' => true, 'label' => '12.0 mm · 160 % of normal'], $cells['features'][1]['properties']);
+        self::assertSame(['mm' => 12.0, 'pct' => 160.0, 'band' => 'much-wetter', 'step' => 5, 'wet' => true, 'label' => '12.0 mm · 160 % of normal'], $cells['features'][1]['properties']);
         self::assertCount(1, GridCells::wetCells($grid, $pct, 150)['features']);
         self::assertSame(1, GridCells::countWet($pct, 150));
         self::assertSame(['type' => 'Polygon', 'coordinates' => [[[10.0, -1.2], [10.2, -1.2], [10.2, -1.0], [10.0, -1.0], [10.0, -1.2]]]], GridCells::bounds($grid));
