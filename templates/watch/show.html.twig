@@ -111,9 +111,17 @@
 </div>
 
 <h2 class="zone" id="rain">Rain — the last {{ bulletin.rainDays }} days over the area</h2>
-<div class="c">
-    <span class="tab">Rain, the last {{ bulletin.rainDays }} days, as % of normal<span class="src">· CHIRPS v2.0 prelim daily against 1981–2025</span></span>
-    <p class="use">Mean <b>{{ bulletin.rainMm is null ? '–' : bulletin.rainMm|round }} mm</b> over the area on the 0.05° grid (about 5 km), <b>{{ bulletin.rainPct is null ? '–' : bulletin.rainPct|round }} % of normal</b>; the outlined cells on the exposure map below are at or above {{ bulletin.wetThresholdPct }} % of their 1981–2025 mean for the same dates. Preliminary data, revised later.{% if bulletin.rainMissing %} Missing days: {{ bulletin.rainMissing|join(', ') }}.{% endif %} [2] The week-by-week tab draws every week's grid; <a href="{{ weeksUrl }}">open it</a>.</p>
+<div class="grid g2">
+    <div class="c en-rain-plate">
+        <span class="tab">Rain, {% if bulletin.rainStart %}<time datetime="{{ bulletin.rainStart|date('c') }}" data-localtime-format="date">{{ bulletin.rainStart|date('Y-m-d') }}</time>{% endif %} to {% if bulletin.rainEnd %}<time datetime="{{ bulletin.rainEnd|date('c') }}" data-localtime-format="date">{{ bulletin.rainEnd|date('Y-m-d') }}</time>{% endif %}<span class="src">· CHIRPS v2.0 prelim daily</span></span>
+        {{ render_map(rainMmMap, {'role': 'img', 'aria-label': 'Rain over the area in millimetres'}) }}
+        <p class="use">Mean <b>{{ bulletin.rainMm is null ? '–' : bulletin.rainMm|round }} mm</b> over the area on the 0.05° grid (about 5 km).</p>
+    </div>
+    <div class="c en-rain-plate">
+        <span class="tab">The same days as % of normal<span class="src">· CHIRPS 1981–2025</span></span>
+        {{ render_map(rainPctMap, {'role': 'img', 'aria-label': 'Rain over the area as percent of normal'}) }}
+        <p class="use"><b>{{ bulletin.rainPct is null ? '–' : bulletin.rainPct|round }} % over the area</b>; the accent cells are at or above {{ bulletin.wetThresholdPct }} % of their 1981–2025 mean for the same dates. Preliminary data, revised later.{% if bulletin.rainMissing %} Missing days: {{ bulletin.rainMissing|join(', ') }}.{% endif %} [2] The week-by-week tab draws every week's grid; <a href="{{ weeksUrl }}">open it</a>.</p>
+    </div>
 </div>
 
 <h2 class="zone" id="exposure">Exposure — if it floods</h2>

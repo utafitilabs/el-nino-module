@@ -76,6 +76,8 @@ final readonly class WatchController
             'bulletin' => $reading->bulletin,
             'watch' => $reading->watch,
             'map' => $this->maps->exposure($area, $reading),
+            'rainMmMap' => $this->maps->recent($area, $reading, true),
+            'rainPctMap' => $this->maps->recent($area, $reading, false),
             'ninoChart' => [] === $weeks ? null : $this->charts->nino($reading->bulletin),
             'outlookChart' => null === $reading->outlook ? null : $this->charts->outlook($reading->outlook),
             'weeksUrl' => $this->router->generate('el_nino_weeks', ['uuid' => $area->getUuidString()]),

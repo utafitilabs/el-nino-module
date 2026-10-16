@@ -86,12 +86,30 @@ final class ExposureMapService
     /** A week's rain as cells, with the cut-off destinations over it. */
     public function week(AreaOfInterest $area, WatchReading $reading, Week $week, bool $millimetres): AtlasMap
     {
+        return $this->rain($area, $reading, $week->getGridMm(), $week->getGridPct(), $millimetres, $week->getHot());
+    }
+
+    /** The bulletin's rain window — the last thirty days or so — as cells, in millimetres or as percent of normal. */
+    public function recent(AreaOfInterest $area, WatchReading $reading, bool $millimetres): AtlasMap
+    {
+        $bulletin = $reading->bulletin;
+
+        return $this->rain($area, $reading, $bulletin->getRecentGridMm(), $bulletin->getRecentGridPct(), $millimetres, $reading->hot);
+    }
+
+    /**
+     * @param list<list<float|null>> $gridMm
+     * @param list<list<float|null>> $gridPct
+     * @param list<string>           $hot
+     */
+    private function rain(AreaOfInterest $area, WatchReading $reading, array $gridMm, array $gridPct, bool $millimetres, array $hot): AtlasMap
+    {
         $map = $this->maps->createMap();
         $ground = $this->ground->forArea($area);
         $map->ground(Ground::fromGeoJson($ground['boundary'], $ground['zones'], scrim: false));
         $bulletin = $reading->bulletin;
         $threshold = $bulletin->getWetThresholdPct();
-        $cells = GridCells::featureCollection($bulletin->getGrid(), $week->getGridMm(), $week->getGridPct(), $threshold);
+        $cells = GridCells::featureCollection($bulletin->getGrid(), $gridMm, $gridPct, $threshold);
         $rules = [];
         foreach (RainBand::ordered() as $band) {
             $rules[] = StyleRule::when('band', $band->value)
@@ -116,7 +134,7 @@ final class ExposureMapService
         }
         $run = $reading->run;
         if (null !== $run) {
-            $map->addLayer($this->destinationsLayer($run, $reading, $week->getHot()));
+            $map->addLayer($this->destinationsLayer($run, $reading, $hot));
         }
         $bounds = GridCells::bounds($bulletin->getGrid());
         if (null !== $bounds) {
