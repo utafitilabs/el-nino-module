@@ -10,7 +10,7 @@
    renders (templates/base.html.twig). */
 
 /* ---- the state word inside a tile's subline ---------------------------- */
-.en-st { font-style: normal; font-weight: 700; }
+.en-st { font-style: normal; font-weight: 700; flex: none; }
 .en-st-fail { color: rgb(var(--c-fail)); }
 .en-st-warn { color: rgb(var(--c-warn)); }
 .en-st-ok { color: rgb(var(--c-ok)); }

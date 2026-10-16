@@ -52,6 +52,37 @@ final readonly class WatchReading
         $this->rainBand = RainBand::of($bulletin->getRainPct(), $bulletin->getWetThresholdPct());
     }
 
+    /**
+     * The sources the analysis names for its layers, as the producer's
+     * provenance states them: rainfall, land cover, roads and places,
+     * population, boundary — whatever it lists. Empty where it lists none.
+     *
+     * @return array<string, string>
+     */
+    public function dataSources(): array
+    {
+        $data = $this->run?->getProvenance()['data'] ?? null;
+        if (!\is_array($data)) {
+            return [];
+        }
+        $out = [];
+        foreach ($data as $key => $value) {
+            if (\is_string($key) && \is_string($value) && '' !== $value) {
+                $out[str_replace('_', ' ', $key)] = $value;
+            }
+        }
+
+        return $out;
+    }
+
+    /** The one sentence about where the roads and places came from, from the provenance or nothing. */
+    public function roadsAndPlacesSentence(): ?string
+    {
+        $source = $this->dataSources()['roads places'] ?? null;
+
+        return null === $source ? null : \sprintf('Roads and places come from %s.', $source);
+    }
+
     public function ensoPlain(): string
     {
         return EnsoWords::plain($this->bulletin->getEnsoPhase(), $this->bulletin->getEnsoStrength());

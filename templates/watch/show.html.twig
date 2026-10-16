@@ -55,7 +55,7 @@
         <div class="sub"><i class="en-st en-st-{{ reading.rainChip }}">{{ reading.rainWords }}</i> · {{ bulletin.rainMm is null ? '–' : bulletin.rainMm|round }} mm of {{ bulletin.rainNormalMm is null ? '–' : bulletin.rainNormalMm|round }} mm{% if bulletin.rainStart and bulletin.rainEnd %} · <time datetime="{{ bulletin.rainStart|date('c') }}" data-localtime-format="date">{{ bulletin.rainStart|date('Y-m-d') }}</time> to <time datetime="{{ bulletin.rainEnd|date('c') }}" data-localtime-format="date">{{ bulletin.rainEnd|date('Y-m-d') }}</time>{% endif %}</div>
     </div>
     <div class="c kpi{{ hot > 0 ? ' bad' : '' }}">
-        <span class="tab">Who gets cut off if it floods?<span class="src">· the analysis</span></span>
+        <span class="tab">Who gets cut off if it floods?<span class="src">· analysis</span></span>
         <b>{{ reading.cutOff|length }}<em>destinations</em></b>
         <div class="sub"><i class="en-st en-st-{{ hot > 0 ? 'fail' : 'ok' }}">{{ hot > 0 ? hot ~ ' in a wet cell now' : 'none in a wet cell now' }}</i>{% if reading.cutOffPeople > 0 %} · about {{ reading.cutOffPeople|number_format }} people{% endif %}{% if reading.bomasCutOff is not null %} · {{ reading.bomasCutOff|number_format }} bomas{% endif %}</div>
     </div>
@@ -118,7 +118,7 @@
 
 <h2 class="zone" id="exposure">Exposure — if it floods</h2>
 <div class="c en-exposure-plate">
-    <span class="tab">Susceptibility, flagged roads and destinations, with this window's rain<span class="src">· the analysis · CHIRPS · OpenStreetMap</span></span>
+    <span class="tab">Susceptibility, flagged roads and destinations, with this window's rain<span class="src">· the analysis · CHIRPS</span></span>
     {{ render_map(map, {'role': 'img', 'aria-label': 'Flood exposure'}) }}
     <p class="use">Susceptibility classes, roads likely cut or at risk, and the destinations that lose access once they go [3]; the accent cells are this window's rain above {{ bulletin.wetThresholdPct }} % of normal. The legend rows switch layers; hover a road, click a destination.</p>
 </div>
@@ -147,7 +147,7 @@
 <ol class="en-refs">
 <li>NOAA Climate Prediction Center. Weekly Niño region SST and anomalies, 1991–2020 base, <a href="https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for">cpc.ncep.noaa.gov</a>. The same feed behind CPC's Weekly ENSO Update.</li>
 <li>Funk, C. et al. (2015). The climate hazards infrared precipitation with stations. <i>Scientific Data</i> 2, 150066, <a href="https://doi.org/10.1038/sdata.2015.66">doi:10.1038/sdata.2015.66</a>. Data: CHIRPS v2.0 preliminary and final daily, 0.05°, Climate Hazards Center, UC Santa Barbara, <a href="https://data.chc.ucsb.edu/products/CHIRPS-2.0/">data.chc.ucsb.edu</a>.</li>
-<li>The flood-exposure analysis behind the susceptibility, the flagged roads and the destinations{% if watch.analysisUrl %}, <a href="{{ watch.analysisUrl }}">{{ watch.analysisUrl }}</a>{% endif %}. Susceptibility from Copernicus DEM, CHIRPS, ESA WorldCover; roads and places from OpenStreetMap; population from WorldPop 2020; boundary from the WDPA. Full references in the analysis.</li>
+<li>The flood-exposure analysis behind the susceptibility, the flagged roads and the destinations{% if watch.analysisUrl %}, <a href="{{ watch.analysisUrl }}">{{ watch.analysisUrl }}</a>{% endif %}.{% for name, source in reading.dataSources %} {{ name|capitalize }}: {{ source }}.{% endfor %} Full references in the analysis.</li>
 <li>International Research Institute for Climate and Society (IRI), Columbia Climate School. CCSR/IRI model-based probabilistic ENSO forecast, <a href="https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/">iri.columbia.edu</a>, CC BY 4.0. IRI publishes the chart only; the percentages are recovered from the bar heights of {% if outlook and outlook.figureUrl %}<a href="{{ outlook.figureUrl }}">the figure</a>{% else %}the figure{% endif %}. The official NOAA CPC forecast can differ slightly from this model-based one.</li>
 <li>Bonan, G. B. (2016). <i>Ecological Climatology: Concepts and Applications</i>, 3rd ed. Cambridge University Press, chapter 7 (El Niño/Southern Oscillation, pp. 105–109, Figs. 7.4 and 7.7). <a href="https://doi.org/10.1017/CBO9781107339200">doi:10.1017/CBO9781107339200</a>.</li>
 <li>Nicholson, S. E. (2017). Climate and climatic variability of rainfall over eastern Africa. <i>Reviews of Geophysics</i> 55(3), 590–635. <a href="https://doi.org/10.1002/2016RG000544">doi:10.1002/2016RG000544</a>.</li>
@@ -156,6 +156,6 @@
 
 {{ include('@Shell/_page_hint.html.twig', {
     lead: 'What this page is not.',
-    say: 'The susceptibility is a relative ranking for an El Niño short-rain season, not a flood depth or a forecast, and it has not yet been validated against observed floods. Roads and ranger posts come from OpenStreetMap and are incomplete. El Niño raises the odds of a wet season; it does not guarantee one, and the Indian Ocean Dipole matters as much, so the regional seasonal forecast should be read alongside this page.',
+    say: 'The susceptibility is a relative ranking for an El Niño short-rain season, not a flood depth or a forecast, and it has not yet been validated against observed floods. ' ~ (reading.roadsAndPlacesSentence ? reading.roadsAndPlacesSentence ~ ' ' : '') ~ 'El Niño raises the odds of a wet season; it does not guarantee one, and the Indian Ocean Dipole matters as much, so the regional seasonal forecast should be read alongside this page.',
 }, with_context: false) }}
 {% endblock %}

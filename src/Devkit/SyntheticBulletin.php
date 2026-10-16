@@ -107,7 +107,7 @@ final class SyntheticBulletin
             ];
         }
         $last = $weekRows[\count($weekRows) - 1];
-        [$recentMm, $recentPct] = self::grids($rows, $cols, 86.0, 62.0, 1.0, 0);
+        [$recentMm, $recentPct] = self::grids($rows, $cols, 86.0, 62.0, 0.35, 0);
 
         $destinations = $withExposure ? self::destinations($box) : null;
         $provenance = $withExposure ? [
@@ -117,6 +117,11 @@ final class SyntheticBulletin
             'run_date' => $builtAt->format('Y-m-d'),
             'weights' => ['hand' => 0.3, 'slope' => 0.15, 'dist' => 0.15, 'facc' => 0.1, 'rain' => 0.2, 'wet' => 0.1],
             'road_rules' => ['at_risk_m' => 100, 'likely_cut_m' => 300, 'fords' => 'always likely cut'],
+            'data' => [
+                'rainfall' => 'a daily rainfall record, 1981 to this year',
+                'roads_places' => 'the reserve\'s own road and station registers',
+                'population' => 'a gridded population estimate',
+            ],
         ] : null;
 
         return new ProducerBulletin(

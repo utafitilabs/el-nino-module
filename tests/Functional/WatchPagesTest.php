@@ -73,6 +73,8 @@ final class WatchPagesTest extends WebTestCase
         self::assertStringContainsString('https://example.test/analysis', $html);
         self::assertGreaterThanOrEqual(1, $crawler->filter('[data-atlas-plate]')->count(), 'the exposure plate is the atlas\'s');
         self::assertStringContainsString('What this page is not.', $html);
+        self::assertStringContainsString('Roads and places come from the reserve&#039;s own road and station registers.', $html, 'the caveat names the sources the provenance names');
+        self::assertStringNotContainsString('OpenStreetMap', $html, 'and no source the producer did not name');
         self::assertStringNotContainsString('PL·0', $html, 'no workshop labels');
     }
 
