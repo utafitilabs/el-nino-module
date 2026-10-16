@@ -111,10 +111,21 @@ final class ExposureMapService
         $threshold = $bulletin->getWetThresholdPct();
         $cells = GridCells::featureCollection($bulletin->getGrid(), $gridMm, $gridPct, $threshold);
         $rules = [];
-        foreach (RainBand::ordered() as $band) {
-            $rules[] = StyleRule::when('band', $band->value)
-                ->fillColor($band->swatch())
-                ->fillOpacity($millimetres ? 0.3 + 0.4 * $band->fillOpacity() : $band->fillOpacity());
+        if ($millimetres) {
+            // MILLIMETRES ARE A RAMP, not the five words of the percent view:
+            // every cell wears the accent, deeper where more fell, in fifths
+            // of the wettest cell of the window; a cell with no rain is clear.
+            foreach (range(0, GridCells::STEPS) as $step) {
+                $rules[] = StyleRule::when('step', $step)
+                    ->fillColor(PlatePalette::ACCENT)
+                    ->fillOpacity(self::stepOpacity($step));
+            }
+        } else {
+            foreach (RainBand::ordered() as $band) {
+                $rules[] = StyleRule::when('band', $band->value)
+                    ->fillColor($band->swatch())
+                    ->fillOpacity($band->fillOpacity());
+            }
         }
         $map->addLayer(new GeoJsonLayer(
             id: 'el-nino.rain',
@@ -129,8 +140,16 @@ final class ExposureMapService
             tooltip: 'label',
             labels: false,
         ));
-        foreach (RainBand::ordered() as $band) {
-            $map->addLegendItem(new LegendItem(label: $band->legendLabel($threshold), swatch: $band->swatch(), group: self::GROUP_RAIN));
+        if ($millimetres) {
+            $wettest = GridCells::wettest($gridMm);
+            foreach (range(GridCells::STEPS, 1) as $step) {
+                $map->addLegendItem(new LegendItem(label: self::stepLabel($step, $wettest), swatch: PlatePalette::ACCENT, group: self::GROUP_RAIN));
+            }
+            $map->addLegendItem(new LegendItem(label: 'no rain', swatch: PlatePalette::DIM, group: self::GROUP_RAIN));
+        } else {
+            foreach (RainBand::ordered() as $band) {
+                $map->addLegendItem(new LegendItem(label: $band->legendLabel($threshold), swatch: $band->swatch(), group: self::GROUP_RAIN));
+            }
         }
         $run = $reading->run;
         if (null !== $run) {
@@ -314,5 +333,17 @@ final class ExposureMapService
         }
 
         return $out;
+    }
+
+    /** A step's opacity: clear for no rain, then .14 to .7 upward. */
+    private static function stepOpacity(int $step): float
+    {
+        return 0 === $step ? 0.0 : 0.14 + 0.14 * $step;
+    }
+
+    /** "≤ 3.1 mm", "≤ 6.3 mm", … up to the wettest cell of the window. */
+    private static function stepLabel(int $step, float $wettest): string
+    {
+        return \sprintf('%s %.1f mm', GridCells::STEPS === $step ? 'up to' : '≤', $wettest * $step / GridCells::STEPS);
     }
 }

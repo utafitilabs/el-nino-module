@@ -43,6 +43,7 @@ final class GridCells
         $xs = self::centres($grid['x_centres'] ?? null);
         $ys = self::centres($grid['y_centres'] ?? null);
         $half = self::cellDeg($grid) / 2;
+        $wettest = self::wettest($mm);
         $features = [];
         foreach ($ys as $j => $y) {
             foreach ($xs as $i => $x) {
@@ -58,6 +59,7 @@ final class GridCells
                         'mm' => null === $m ? null : round($m, 1),
                         'pct' => null === $p ? null : round($p),
                         'band' => $band?->value,
+                        'step' => null === $m ? null : self::step($m, $wettest),
                         'wet' => null !== $p && $p >= $wetThresholdPct,
                         'label' => null === $m
                             ? 'no reading'
@@ -78,6 +80,37 @@ final class GridCells
         }
 
         return ['type' => 'FeatureCollection', 'features' => $features];
+    }
+
+    /**
+     * THE MILLIMETRE STEPS: a cell's share of the wettest cell in the same
+     * window, in fifths — 0 for no rain, 1 to 5 upward — so the mm plate reads
+     * as the design's ramp: deeper mint where more fell.
+     */
+    public const int STEPS = 5;
+
+    /** @param Grid $mm */
+    public static function wettest(array $mm): float
+    {
+        $wettest = 0.0;
+        foreach ($mm as $row) {
+            foreach ($row as $value) {
+                if (null !== $value && $value > $wettest) {
+                    $wettest = $value;
+                }
+            }
+        }
+
+        return $wettest;
+    }
+
+    public static function step(float $mm, float $wettest): int
+    {
+        if ($mm <= 0.0 || $wettest <= 0.0) {
+            return 0;
+        }
+
+        return max(1, min(self::STEPS, (int) ceil($mm / $wettest * self::STEPS)));
     }
 
     /**
