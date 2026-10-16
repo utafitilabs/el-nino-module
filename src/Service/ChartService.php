@@ -15,10 +15,12 @@ namespace Uhifadhi\ElNino\Service;
 
 use Uhifadhi\Bundle\AtlasBundle\Model\AtlasChart;
 use Uhifadhi\Bundle\AtlasBundle\Model\AxisScale;
-use Uhifadhi\Bundle\AtlasBundle\Model\ChartFigures;
 use Uhifadhi\Bundle\AtlasBundle\Model\ChartKind;
 use Uhifadhi\Bundle\AtlasBundle\Model\ChartLegend;
+use Uhifadhi\Bundle\AtlasBundle\Model\ChartPanel;
+use Uhifadhi\Bundle\AtlasBundle\Model\ChartRange;
 use Uhifadhi\Bundle\AtlasBundle\Model\ChartSeries;
+use Uhifadhi\Bundle\AtlasBundle\Model\LineStyle;
 use Uhifadhi\Contracts\Atlas\PlatePalette;
 use Uhifadhi\ElNino\Entity\Bulletin;
 use Uhifadhi\ElNino\Entity\Week;
@@ -44,12 +46,62 @@ final class ChartService
         return new AtlasChart(
             ChartKind::Line,
             $labels,
-            [new ChartSeries('Niño 3.4 anomaly', $points, accent: true)],
+            [new ChartSeries('Niño 3.4 anomaly', $points, accent: true, marked: [] === $points ? null : \count($points) - 1)],
             target: EnsoWords::THRESHOLD,
             unit: '°C',
             targetLabel: 'El Niño threshold',
             legend: ChartLegend::None,
+            ranges: self::ensoRanges(),
         );
+    }
+
+    /**
+     * THE TWO RANGES EVERY NIÑO 3.4 CHART IS READ AGAINST: El Niño above the
+     * threshold, La Niña below its mirror, each in the tone the page gives
+     * that state.
+     *
+     * @return list<ChartRange>
+     */
+    private static function ensoRanges(): array
+    {
+        return [
+            new ChartRange(EnsoWords::THRESHOLD, null, \sprintf('EL NIÑO ≥ +%.1f °C', EnsoWords::THRESHOLD), swatch: PlatePalette::FAIL),
+            new ChartRange(null, -EnsoWords::THRESHOLD, \sprintf('LA NIÑA ≤ −%.1f °C', EnsoWords::THRESHOLD), swatch: PlatePalette::ACCENT),
+        ];
+    }
+
+    /**
+     * THE RAIN AXIS TOPS OUT ON A ROUND NUMBER — the next multiple of ten,
+     * fifty or two hundred above the wettest week, in two steps — so the
+     * gridlines read as figures and not as the data's own maximum.
+     */
+    private static function roundAxis(float $largest): AxisScale
+    {
+        $unit = $largest > 200.0 ? 200.0 : ($largest > 50.0 ? 50.0 : 10.0);
+        $top = max($unit, ceil($largest / $unit) * $unit);
+
+        return new AxisScale($top, $top / 2);
+    }
+
+    /**
+     * THE WEEK AXIS WRITES THE MONTHS, not twenty-six dates: the first week of
+     * each month carries its name, every other week an empty label.
+     *
+     * @param list<Week> $weeks
+     *
+     * @return list<string>
+     */
+    private static function monthLabels(array $weeks): array
+    {
+        $labels = [];
+        $month = '';
+        foreach ($weeks as $week) {
+            $of = $week->getStart()->format('Y-m');
+            $labels[] = $of === $month ? '' : $week->getStart()->format('M');
+            $month = $of;
+        }
+
+        return $labels;
     }
 
     /** The outlook as parts of a whole per season: El Niño, neutral, La Niña. */
@@ -81,60 +133,64 @@ final class ChartService
     }
 
     /**
-     * Rain over the area week by week, against the normal for those dates.
+     * THE LOWER PANEL OF THE TWO SIGNALS: rain over the area week by week as
+     * bars, against the normal for those dates as a dashed line over them,
+     * with the picked week banded.
      *
      * @param list<Week> $weeks
      */
-    public function weeklyRain(array $weeks): AtlasChart
+    public function weeklyRain(array $weeks, ?int $picked = null): AtlasChart
     {
-        $labels = [];
         $rain = [];
         $normal = [];
         $largest = 1.0;
         foreach ($weeks as $week) {
-            $labels[] = $week->getStart()->format('j M');
             $rain[] = round($week->getMm(), 1);
             $normal[] = round($week->getNormalMm(), 1);
             $largest = max($largest, $week->getMm(), $week->getNormalMm());
         }
 
         return new AtlasChart(
-            ChartKind::Line,
-            $labels,
+            ChartKind::Bar,
+            self::monthLabels($weeks),
             [
                 new ChartSeries('Rain over the area', $rain, accent: true),
-                new ChartSeries('Normal for those dates', $normal, swatch: PlatePalette::DIM),
+                new ChartSeries('Normal for those dates', $normal, swatch: PlatePalette::DIM, line: LineStyle::Dashed),
             ],
             unit: 'mm',
-            axis: AxisScale::covering($largest, 4),
-            figures: null,
+            axis: self::roundAxis($largest),
             legend: ChartLegend::Chips,
+            highlight: $picked,
+            panel: ChartPanel::Lower,
         );
     }
 
     /**
-     * The Pacific week by week, on the same weeks as the rain chart.
+     * THE UPPER PANEL OF THE TWO SIGNALS: the Pacific week by week on the
+     * same weeks as the rain, the El Niño range shaded, the picked week
+     * marked on the line and banded, and no week names of its own — the
+     * lower panel writes them once for both.
      *
      * @param list<Week> $weeks
      */
-    public function weeklyNino(array $weeks): AtlasChart
+    public function weeklyNino(array $weeks, ?int $picked = null): AtlasChart
     {
-        $labels = [];
         $points = [];
         foreach ($weeks as $week) {
-            $labels[] = $week->getStart()->format('j M');
             $points[] = $week->getNinoAnomaly();
         }
 
         return new AtlasChart(
             ChartKind::Line,
-            $labels,
-            [new ChartSeries('Niño 3.4 anomaly', $points, accent: true)],
+            self::monthLabels($weeks),
+            [new ChartSeries('Niño 3.4 anomaly', $points, accent: true, marked: $picked)],
             target: EnsoWords::THRESHOLD,
             unit: '°C',
             targetLabel: 'El Niño threshold',
-            figures: new ChartFigures('°C', 1),
             legend: ChartLegend::None,
+            ranges: [new ChartRange(EnsoWords::THRESHOLD, null, \sprintf('EL NIÑO ≥ +%.1f °C', EnsoWords::THRESHOLD), swatch: PlatePalette::FAIL)],
+            highlight: $picked,
+            panel: ChartPanel::Upper,
         );
     }
 }

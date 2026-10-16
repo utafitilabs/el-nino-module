@@ -38,17 +38,14 @@
     <noscript><button class="cta" type="submit">Show</button></noscript>
 </form>
 
-<div class="grid g2">
-    <div class="c">
-        <span class="tab">The Pacific, week by week<span class="src">· NOAA CPC</span></span>
-        {{ atlas_chart(ninoChart) }}
-        <p class="use">Niño 3.4 anomaly per week, the CPC week nearest each calendar week. The line at +0.5 °C is the El Niño threshold [1].</p>
-    </div>
-    <div class="c">
-        <span class="tab">Rain over the area, week by week<span class="src">· CHIRPS</span></span>
-        {{ atlas_chart(rainChart) }}
-        <p class="use">Mean rain over the area per week against the 1981–2025 normal for the same dates [2].</p>
-    </div>
+<div class="c en-pair">
+    <span class="tab">The two signals, week by week<span class="src">· CPC · CHIRPS</span></span>
+    <span class="en-flag" aria-label="The selected week's readings">{{ week.ninoAnomaly is null ? '–' : (week.ninoAnomaly > 0 ? '+' : '') ~ week.ninoAnomaly|number_format(1) ~ ' °C' }} · {{ week.mm|number_format(1) }} mm · {{ week.pct is null ? '–' : week.pct|round ~ ' %' }}</span>
+    <span class="en-panel">Pacific · Niño 3.4 anomaly</span>
+    {{ atlas_chart(ninoChart, '', '', {'--chart-height': '150px', 'aria-label': 'Niño 3.4 anomaly per week'}) }}
+    <span class="en-panel">Area · rain per week</span>
+    {{ atlas_chart(rainChart, '', '', {'--chart-height': '170px', 'aria-label': 'Rain over the area per week'}) }}
+    <p class="use">Top: the Niño 3.4 anomaly, the CPC week nearest each calendar week, with the El Niño range shaded [1]. Bottom: mean rain over the area per week against the 1981–2025 normal for the same dates [2]. The column is the selected week.</p>
 </div>
 
 <div class="c en-week-plate">

@@ -126,8 +126,8 @@ final readonly class WatchController
             'millimetres' => $millimetres,
             'caption' => null === $week ? null : $this->weeks->caption($week, $reading->bulletin->getWetThresholdPct()),
             'weekMap' => null === $week ? null : $this->maps->week($area, $reading, $week, $millimetres),
-            'rainChart' => [] === $weeks ? null : $this->charts->weeklyRain($weeks),
-            'ninoChart' => [] === $weeks ? null : $this->charts->weeklyNino($weeks),
+            'rainChart' => [] === $weeks ? null : $this->charts->weeklyRain($weeks, $picked),
+            'ninoChart' => [] === $weeks ? null : $this->charts->weeklyNino($weeks, $picked),
             'weekParameter' => self::WEEK_PARAMETER,
             'fieldParameter' => self::FIELD_PARAMETER,
         ]));

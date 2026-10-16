@@ -102,17 +102,14 @@ producer's contract carries the record itself.
   it belongs on.
 - **The bomas layer** is stored and counted in the attention items where the
   producer routed households; it is not yet drawn on the plate.
-- **The two signals in one figure, and the ENSO bands.** The design draws
-  the Pacific chart (PL·01) with the El Niño and La Niña ranges shaded and the
-  last reading marked, and the week-by-week signals (PL·05) as two panels on
-  one week axis — the Niño line above, the rain as bars against a dotted
-  normal below, the picked week banded. The atlas's chart states a kind, its
-  series, a target line, an axis and figures, and nothing else, so the port
-  draws PL·01 as a line with the threshold as its target, and PL·05 as two
-  line charts side by side. **Reopens** when the atlas chart grows shaded
-  value ranges with a word, a marked last point, a banded label, and a line
-  series over bars: then PL·05 replaces the two charts, nothing is added
-  twice.
+- **The two signals in one figure, and the ENSO bands** are ported whole since
+  core 0.1.28: the Pacific chart shades the El Niño and La Niña ranges and
+  marks the last reading; the week-by-week figure is two atlas panels on one
+  week axis (`ChartPanel::Upper` and `Lower`), the Niño line above with the
+  picked week marked, the rain as bars against a dashed normal below, the
+  picked week banded through both. The owner chose this shape (option B of
+  five, 16 October 2026) over one panel with two axes, a percent-of-normal
+  ribbon, three strips with a readout, and a fact row first.
 - **The narrated animation** is not served; it arrives as a static asset of the
   module once its final files exist.
 - **Alerts** on a threshold rule are out of scope until the platform has an
