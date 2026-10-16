@@ -86,6 +86,9 @@
 /* ---- the empty state and the configure section ----------------------------- */
 .en-empty { max-width: 72ch; }
 .en-section { margin-bottom: 20px; }
+/* A card that follows a form's action row: the row ends on a hairline, so the
+   next card keeps the same distance below it that a card keeps above it. */
+.en-section-after { margin-top: 28px; }
 .en-field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
 .en-field .use { margin: 0; }
 .en-field textarea.fld { min-height: 96px; resize: vertical; }
