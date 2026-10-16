@@ -67,38 +67,35 @@
 </div>
 <p class="en-tiles-note"><b>Reading the tiles.</b> The first is the sea-surface temperature of the central Pacific (Niño 3.4) against its 1991–2020 mean; +0.5 °C sustained is El Niño, ≥ +2 °C very strong. The second is the share of 22 forecast models' scenarios that keep El Niño in the short-rains season. The third is satellite rainfall over the area against the 1981–2025 mean for the same dates. The fourth is the analysis's model of road access once the flagged segments flood, not an observation. The background below explains why the Pacific matters here.</p>
 
-<div class="en-bgwrap">
-    <p class="en-bgline"><b>Why the Pacific matters here.</b> El Niño is a warming of the central Pacific that weakens the trade winds and shifts the tropical rain belt east. Through the Indian Ocean that shift relaxes the dry sinking air over East Africa and enhances the October-to-December short rains; the Indian Ocean Dipole can add to or replace the effect.{% if watch.areaRecord %} {{ watch.areaRecord }}{% endif %}</p>
-    <details class="en-bgd" id="mechanism">
-        <summary>Background in full: the Walker circulation, El Niño, and the East Africa link</summary>
-        <div class="c en-circ-plate">
-            <span class="tab">The two circulations: a normal year, El Niño, the Indian Ocean Dipole<span class="src">· after Bonan 2016 · Nicholson 2017 · Saji et al. 1999</span></span>
-            <div class="en-state-row"><span class="mono en-state-k">State</span>
-                {% for state in circulationStates %}<a class="btn sm{{ state == circulation ? ' on' : '' }}" href="{{ path('el_nino_watch', {uuid: area.uuid}) }}?{{ circulationParameter }}={{ state.value }}#mechanism">{{ state.label }}</a>{% endfor %}
-            </div>
-            {{ render_map(circulationMap, {'role': 'img', 'aria-label': 'The two circulations along the equator, ' ~ circulation.label|lower}) }}
-            <p class="use" id="en-circ-caption"><b>{{ circulation.lead }}</b> {{ circulation.caption }}</p>
-            <p class="use">Plan view along the equator. Two loops share the rising branch over Indonesia: the Pacific Walker cell, whose side-on section is the pair below, and the Indian Ocean cell, whose sinking branch lies over East Africa. Positions are schematic; the box is the Niño 3.4 region whose temperature the index on this page measures.</p>
-        </div>
-        <div class="grid g2">
-            <div class="c">
-                <span class="tab">The Pacific in a normal year<span class="src">· after Bonan 2016, Fig. 7.4</span></span>
-                <img class="en-walker" src="{{ asset('bundles/uhifadhielnino/walker-normal.svg') }}" alt="Walker circulation in a normal year: air rises over the warm pool near Indonesia, flows east aloft and sinks over the cool east">
-                <p class="use"><b>The Walker circulation.</b> The trade winds drive the warm surface water west into a pool warmer than 28 °C near Indonesia; cold water rises off South America. Air rises over the warm pool with heavy rain, flows east aloft and sinks over the cool east, where the coast stays dry [5].</p>
-            </div>
-            <div class="c">
-                <span class="tab">El Niño<span class="src">· after Bonan 2016, Fig. 7.7a</span></span>
-                <img class="en-walker" src="{{ asset('bundles/uhifadhielnino/walker-el-nino.svg') }}" alt="Walker circulation during El Niño: the trades weaken, the warm water slides east and the rain follows it">
-                <p class="use"><b>Every few years the trades weaken.</b> The warm water spreads east, the sea off South America becomes two to three degrees warmer than normal, the rain moves to the central Pacific, and the weaker winds let the east warm further until a mature El Niño is in place. The index is the temperature anomaly of that central region [1, 5].</p>
-            </div>
-        </div>
-        <div class="c">
-            <span class="tab">From the Pacific to the short rains<span class="src">· Nicholson 2017 · Saji et al. 1999</span></span>
-            <p class="use"><b>The connection runs through the Indian Ocean.</b> In a normal year air rises over Indonesia and sinks, dry, over the western Indian Ocean and East Africa. During El Niño the rising branch moves east, that sinking relaxes, the western Indian Ocean warms and moist air reaches the coast, so the October-to-December short rains over East Africa are enhanced [6]. The Indian Ocean Dipole (west warm, east cool) strengthens the same flow; it often coincides with El Niño and in some years acts alone [7]. The effect is weak in the March-to-May long rains.</p>
-            {% if watch.areaRecord %}<p class="use"><b>In this area's record</b> [3]: {{ watch.areaRecord }}</p>{% endif %}
-        </div>
-    </details>
+<h2 class="zone" id="mechanism">Why the Pacific matters here</h2>
+<div class="en-bghint"><p class="en-bgline"><b>Why the Pacific matters here.</b> El Niño is a warming of the central Pacific that weakens the trade winds and shifts the tropical rain belt east. Through the Indian Ocean that shift relaxes the dry sinking air over East Africa and enhances the October-to-December short rains; the Indian Ocean Dipole can add to or replace the effect.{% if watch.areaRecord %} {{ watch.areaRecord }}{% endif %}</p></div>
+<div class="c en-circ-plate">
+    <span class="tab">The two circulations: a normal year, El Niño, the Indian Ocean Dipole<span class="src">· after Bonan 2016 · Nicholson 2017 · Saji et al. 1999</span></span>
+    <div class="en-state-row"><span class="mono en-state-k">State</span>
+        {% for state in circulationStates %}<a class="btn sm{{ state == circulation ? ' on' : '' }}" href="{{ path('el_nino_watch', {uuid: area.uuid}) }}?{{ circulationParameter }}={{ state.value }}#mechanism">{{ state.label }}</a>{% endfor %}
+    </div>
+    {{ render_map(circulationMap, {'role': 'img', 'aria-label': 'The two circulations along the equator, ' ~ circulation.label|lower}) }}
+    <p class="use" id="en-circ-caption"><b>{{ circulation.lead }}</b> {{ circulation.caption }}</p>
+    <p class="use">Plan view along the equator. Two loops share the rising branch over Indonesia: the Pacific Walker cell, whose side-on section is the pair below, and the Indian Ocean cell, whose sinking branch lies over East Africa. Positions are schematic; the box is the Niño 3.4 region whose temperature the index on this page measures.</p>
 </div>
+<div class="grid g2">
+    <div class="c">
+        <span class="tab">The Pacific in a normal year<span class="src">· after Bonan 2016, Fig. 7.4</span></span>
+        <img class="en-walker" src="{{ asset('bundles/uhifadhielnino/walker-normal.svg') }}" alt="Walker circulation in a normal year: air rises over the warm pool near Indonesia, flows east aloft and sinks over the cool east">
+        <p class="use"><b>The Walker circulation.</b> The trade winds drive the warm surface water west into a pool warmer than 28 °C near Indonesia; cold water rises off South America. Air rises over the warm pool with heavy rain, flows east aloft and sinks over the cool east, where the coast stays dry [5].</p>
+    </div>
+    <div class="c">
+        <span class="tab">El Niño<span class="src">· after Bonan 2016, Fig. 7.7a</span></span>
+        <img class="en-walker" src="{{ asset('bundles/uhifadhielnino/walker-el-nino.svg') }}" alt="Walker circulation during El Niño: the trades weaken, the warm water slides east and the rain follows it">
+        <p class="use"><b>Every few years the trades weaken.</b> The warm water spreads east, the sea off South America becomes two to three degrees warmer than normal, the rain moves to the central Pacific, and the weaker winds let the east warm further until a mature El Niño is in place. The index is the temperature anomaly of that central region [1, 5].</p>
+    </div>
+</div>
+<div class="c">
+    <span class="tab">From the Pacific to the short rains<span class="src">· Nicholson 2017 · Saji et al. 1999</span></span>
+    <p class="use"><b>The connection runs through the Indian Ocean.</b> In a normal year air rises over Indonesia and sinks, dry, over the western Indian Ocean and East Africa. During El Niño the rising branch moves east, that sinking relaxes, the western Indian Ocean warms and moist air reaches the coast, so the October-to-December short rains over East Africa are enhanced [6]. The Indian Ocean Dipole (west warm, east cool) strengthens the same flow; it often coincides with El Niño and in some years acts alone [7]. The effect is weak in the March-to-May long rains.</p>
+    {% if watch.areaRecord %}<p class="use"><b>In this area's record</b> [3]: {{ watch.areaRecord }}</p>{% endif %}
+</div>
+
 
 <h2 class="zone" id="enso">ENSO — the Pacific now, and next</h2>
 <div class="grid g32">

@@ -77,6 +77,16 @@ the atlas plate re-rendered by the server with the week's layer. **Reopens** if
 a reader asks for the animation; then the plate's swap hook carries the week's
 layer without a reload.
 
+## The background stands open
+
+The settled page folds the background — the two circulations, the two
+schematics, the East Africa link — behind a dashed box and a disclosure. The
+owner ruled on 16 October 2026 that the background is as important as the
+figures: it stands open under its own section heading; only the one-paragraph reading keeps
+the dotted frame a hint wears.
+**Reopens** if the page grows a second long section and the reader asks for a
+shorter overview.
+
 ## The area's record is the area's words
 
 The settled page carries a paragraph about what past El Niño seasons did on one

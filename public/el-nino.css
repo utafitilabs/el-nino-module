@@ -27,22 +27,10 @@
 .en-tiles-note { font-size: 12px; color: rgb(var(--c-dim)); line-height: 1.6; margin: -6px 0 0; max-width: 110ch; }
 .en-tiles-note b { color: rgb(var(--c-fog)); }
 
-/* ---- the background: one line, then the whole story folded ------------- */
-.en-bgwrap { margin: 18px 0 0; border: 1px dashed color-mix(in srgb, rgb(var(--c-acc)) 42%, transparent); border-radius: 12px; padding: 13px 15px 10px; }
-.en-bgline { font-size: 12.5px; color: rgb(var(--c-fog)); line-height: 1.6; margin: 0 0 10px; }
+/* ---- the background's one line, in the dotted frame a hint wears -------- */
+.en-bghint { border: 1px dashed color-mix(in srgb, rgb(var(--c-acc)) 42%, transparent); border-radius: 12px; padding: 13px 15px; margin: 0 0 20px; }
+.en-bgline { font-size: 13px; color: rgb(var(--c-fog)); line-height: 1.6; margin: 0; max-width: 110ch; }
 .en-bgline b { color: rgb(var(--c-tx)); }
-.en-bgd { margin: 0; }
-.en-bgd > summary {
-    display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px; padding: 6px 12px;
-    border: 1px solid var(--c-ln2); border-radius: 9px; color: rgb(var(--c-fog));
-    font: 600 11px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; list-style: none;
-}
-.en-bgd:not([open]) > summary { margin: 0; }
-.en-bgd > summary::before { content: "▸"; color: rgb(var(--c-acc)); }
-.en-bgd[open] > summary::before { content: "▾"; }
-.en-bgd > summary:hover { color: rgb(var(--c-tx)); border-color: rgb(var(--c-fog)); }
-.en-bgd > .grid { margin-top: 4px; }
-.en-bgd > .c { margin-top: 20px; }
 
 /* The two schematics are images: a diagram is not an icon, and it ships
    with its own colours chosen to read on both themes. */
