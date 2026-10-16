@@ -168,7 +168,8 @@ final class ChartService
     /**
      * THE UPPER PANEL OF THE TWO SIGNALS: the Pacific week by week on the
      * same weeks as the rain, the El Niño range shaded, the picked week
-     * marked on the line and banded, and no week names of its own — the
+     * banded (the column is the one mark; a dot on the line read as a
+     * boundary), and no week names of its own — the
      * lower panel writes them once for both.
      *
      * @param list<Week> $weeks
@@ -183,7 +184,7 @@ final class ChartService
         return new AtlasChart(
             ChartKind::Line,
             self::monthLabels($weeks),
-            [new ChartSeries('Niño 3.4 anomaly', $points, accent: true, marked: $picked)],
+            [new ChartSeries('Niño 3.4 anomaly', $points, accent: true)],
             target: EnsoWords::THRESHOLD,
             unit: '°C',
             targetLabel: 'El Niño threshold',
