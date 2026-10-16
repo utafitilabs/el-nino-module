@@ -52,7 +52,7 @@
     <div class="c kpi{{ bulletin.rainPct is not null and bulletin.rainPct >= bulletin.wetThresholdPct ? ' hot' : '' }}">
         <span class="tab">How wet were the last weeks here?<span class="src">· CHIRPS</span></span>
         <b>{{ bulletin.rainPct is null ? '–' : bulletin.rainPct|round }}<em>% of normal</em></b>
-        <div class="sub"><i class="en-st en-st-{{ reading.rainChip }}">{{ reading.rainWords }}</i> · {{ bulletin.rainMm is null ? '–' : bulletin.rainMm|round }} mm of {{ bulletin.rainNormalMm is null ? '–' : bulletin.rainNormalMm|round }} mm{% if bulletin.rainStart and bulletin.rainEnd %} · <time datetime="{{ bulletin.rainStart|date('c') }}" data-localtime-format="date">{{ bulletin.rainStart|date('Y-m-d') }}</time> to <time datetime="{{ bulletin.rainEnd|date('c') }}" data-localtime-format="date">{{ bulletin.rainEnd|date('Y-m-d') }}</time>{% endif %}</div>
+        <div class="sub"><i class="en-st en-st-{{ reading.rainChip }}">{{ reading.rainWords }}</i> · {{ bulletin.rainMm is null ? '–' : bulletin.rainMm|round }} mm of {{ bulletin.rainNormalMm is null ? '–' : bulletin.rainNormalMm|round }} mm · {{ bulletin.rainDays }} days</div>
     </div>
     <div class="c kpi{{ hot > 0 ? ' bad' : '' }}">
         <span class="tab">Who gets cut off if it floods?<span class="src">· analysis</span></span>
