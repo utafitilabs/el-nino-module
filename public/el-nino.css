@@ -51,10 +51,10 @@
 .en-circ-plate { --map-plate-height: 380px; margin-bottom: 20px; }
 .en-state-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
 .en-state-k { font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: rgb(var(--c-dim)); }
-.en-week-plate { --map-plate-height: min(56vh, 540px); }
+.en-week-plate { --map-plate-height: 392px; }
 
 /* ---- the two signals: two panels on one axis, in one card ---------------- */
-.en-pair { position: relative; margin-bottom: 20px; }
+.en-pair { position: relative; }
 .en-pair .en-flag { position: absolute; top: 14px; right: 16px; font: 500 10.5px/1 var(--font-mono); letter-spacing: .02em; color: rgb(var(--c-tx)); background: rgb(var(--c-raised)); border: 1px solid rgb(var(--c-ln2)); border-radius: 6px; padding: 5px 8px; }
 .en-pair .en-panel { display: block; margin: 10px 2px 2px; font: 500 9px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: rgb(var(--c-fog)); }
 .en-pair .en-panel:first-of-type { margin-top: 6px; }

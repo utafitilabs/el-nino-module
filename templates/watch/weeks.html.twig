@@ -38,6 +38,7 @@
     <noscript><button class="cta" type="submit">Show</button></noscript>
 </form>
 
+<div class="grid g2">
 <div class="c en-pair">
     <span class="tab">The two signals, week by week<span class="src">· CPC · CHIRPS</span></span>
     <span class="en-flag" aria-label="The selected week's readings">{{ week.ninoAnomaly is null ? '–' : (week.ninoAnomaly > 0 ? '+' : '') ~ week.ninoAnomaly|number_format(1) ~ ' °C' }} · {{ week.mm|number_format(1) }} mm · {{ week.pct is null ? '–' : week.pct|round ~ ' %' }}</span>
@@ -52,6 +53,7 @@
     <span class="tab">Where the selected week's rain fell<span class="src">· {{ week.label }} · {{ millimetres ? 'mm' : '% of normal' }}</span></span>
     {{ render_map(weekMap, {'role': 'img', 'aria-label': 'Rain over the area in the week of ' ~ week.label}) }}
     <p class="use" id="en-week-caption"><b>{{ week.label }}.</b> {{ caption }}</p>
+</div>
 </div>
 
 <div class="c">
