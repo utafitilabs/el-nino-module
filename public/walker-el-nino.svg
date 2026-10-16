@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" role="img" aria-label="Walker circulation during El Niño" font-family="ui-monospace, Menlo, monospace" font-size="9.5" fill="#8a9a90">
+ <defs><marker id="ahe" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a9a90"/></marker></defs>
+ <rect x="20" y="118" width="520" height="62" rx="4" fill="#2aa882" fill-opacity=".16"/>
+ <path d="M20,118 L540,118 L540,150 L280,154 L20,146 Z" fill="#d4573f" fill-opacity=".42"/>
+ <line x1="20" y1="118" x2="540" y2="118" stroke="#8a9a90" stroke-opacity=".6"/>
+ <text x="26" y="112">Indonesia</text><text x="534" y="112" text-anchor="end">South America</text>
+ <text x="230" y="140" font-weight="700" fill="#5f6f66">warm pool &gt; 28 °C</text><text x="534" y="172" text-anchor="end" fill="#5f6f66">+2 to +3 °C warmer</text>
+ <g stroke="#8a9a90" fill="none" stroke-width="2" marker-end="url(#ahe)">
+  <line x1="280" y1="100" x2="280" y2="38"/><line x1="280" y1="30" x2="470" y2="30"/><line x1="470" y1="38" x2="470" y2="100"/>
+  <line x1="470" y1="106" x2="280" y2="106" stroke-width="1.2" stroke-opacity=".5"/>
+ </g>
+ <g fill="#8a9a90" transform="translate(268 46)"><circle r="9"/><circle cx="11" cy="-4" r="12"/><circle cx="22" r="9"/></g>
+ <g stroke="#2aa882" stroke-width="2" transform="translate(268 62)"><line x1="2" y1="0" x2="2" y2="10"/><line x1="10" y1="0" x2="10" y2="10"/><line x1="18" y1="0" x2="18" y2="10"/></g>
+ <text x="40" y="62" fill="#c48a2a" text-anchor="start">dry</text>
+ <text x="280" y="22" text-anchor="middle">convection shifts to the central Pacific</text>
+ <text x="280" y="196" text-anchor="middle">El Niño: the trades weaken, the warm water slides east, the rain follows it</text>
+</svg>

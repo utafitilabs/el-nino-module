@@ -1,0 +1,85 @@
+{
+    "name": "uhifadhi/el-nino-module",
+    "description": "El Niño watch: the state of the equatorial Pacific, the chance it lasts into the short rains, the rain of the last weeks over an area, and which roads and places lose access if it floods — one bulletin a week, from a producer the area names.",
+    "type": "symfony-bundle",
+    "keywords": [
+        "symfony-ux",
+        "el-nino",
+        "enso",
+        "climate",
+        "rainfall",
+        "flood",
+        "gis",
+        "postgis",
+        "symfony",
+        "uhifadhi"
+    ],
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Ezekiel Mjema",
+            "homepage": "https://github.com/eemjema"
+        }
+    ],
+    "require": {
+        "php": ">=8.4",
+        "ext-json": "*",
+        "doctrine/dbal": "^4.0",
+        "doctrine/doctrine-bundle": "^3.0",
+        "doctrine/orm": "^3.5",
+        "symfony/asset": "^7.3 || ^8.0",
+        "symfony/asset-mapper": "^7.3 || ^8.0",
+        "symfony/config": "^7.3 || ^8.0",
+        "symfony/framework-bundle": "^7.3 || ^8.0",
+        "symfony/http-foundation": "^7.3 || ^8.0",
+        "symfony/rate-limiter": "^7.3 || ^8.0",
+        "symfony/twig-bundle": "^7.3 || ^8.0",
+        "symfony/uid": "^7.3 || ^8.0",
+        "symfony/ux-icons": "^3.4",
+        "uhifadhi/uhifadhi": "^0.1.27",
+        "utafitilabs/postgis-bundle": "^0.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Uhifadhi\\ElNino\\": "src/",
+            "Uhifadhi\\ElNino\\Migrations\\": "migrations/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Uhifadhi\\ElNino\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "doctrine/doctrine-migrations-bundle": "^4.0",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "phpstan/phpstan": "^2.2",
+        "phpunit/phpunit": "^13.2",
+        "symfony/browser-kit": "^7.3 || ^8.0",
+        "symfony/css-selector": "^7.3 || ^8.0",
+        "symfony/dependency-injection": "^7.3 || ^8.0",
+        "symfony/security-bundle": "^7.3 || ^8.0",
+        "symfony/security-core": "^7.3 || ^8.0",
+        "symfony/security-csrf": "^7.3 || ^8.0",
+        "symfony/security-http": "^7.3 || ^8.0",
+        "symfony/stimulus-bundle": "^2.20 || ^2.30 || ^2.0",
+        "symfony/ux-chartjs": "^2.20 || ^3.0",
+        "symfony/ux-map": "^2.20 || ^3.0"
+    },
+    "scripts": {
+        "cs:fix": "php-cs-fixer fix",
+        "cs:check": "php-cs-fixer fix --dry-run --diff",
+        "phpstan": "phpstan analyse --no-progress --memory-limit=1G",
+        "test": "phpunit",
+        "check": [
+            "@cs:check",
+            "@phpstan",
+            "@test"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

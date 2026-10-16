@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" role="img" aria-label="Walker circulation in a normal year" font-family="ui-monospace, Menlo, monospace" font-size="9.5" fill="#8a9a90">
+ <defs><marker id="ahn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a9a90"/></marker></defs>
+ <rect x="20" y="118" width="520" height="62" rx="4" fill="#2aa882" fill-opacity=".16"/>
+ <path d="M20,118 L540,118 L540,126 L380,134 L200,150 L20,166 Z" fill="#d4573f" fill-opacity=".42"/>
+ <line x1="20" y1="118" x2="540" y2="118" stroke="#8a9a90" stroke-opacity=".6"/>
+ <text x="26" y="112">Indonesia</text><text x="534" y="112" text-anchor="end">South America</text>
+ <text x="40" y="140" font-weight="700" fill="#5f6f66">warm pool &gt; 28 °C</text><text x="534" y="172" text-anchor="end" fill="#5f6f66">cold water upwells</text>
+ <g stroke="#8a9a90" fill="none" stroke-width="2" marker-end="url(#ahn)">
+  <line x1="90" y1="100" x2="90" y2="38"/><line x1="90" y1="30" x2="470" y2="30"/><line x1="470" y1="38" x2="470" y2="100"/>
+  <line x1="470" y1="106" x2="90" y2="106" stroke-width="3" stroke-opacity="1"/>
+ </g>
+ <g fill="#8a9a90" transform="translate(78 46)"><circle r="9"/><circle cx="11" cy="-4" r="12"/><circle cx="22" r="9"/></g>
+ <g stroke="#2aa882" stroke-width="2" transform="translate(78 62)"><line x1="2" y1="0" x2="2" y2="10"/><line x1="10" y1="0" x2="10" y2="10"/><line x1="18" y1="0" x2="18" y2="10"/></g>
+ <text x="486" y="62" fill="#c48a2a" text-anchor="start">dry</text>
+ <text x="90" y="22" text-anchor="middle">air rises over the warm pool, sinks in the east</text>
+ <text x="280" y="196" text-anchor="middle">normal year: trade winds (bottom arrow) hold the warm water in the west</text>
+</svg>

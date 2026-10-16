@@ -1,0 +1,10 @@
+/vendor/
+/.phpunit.cache/
+/.php-cs-fixer.cache
+/composer.lock
+/config/reference.php
+
+# IDE / editor files — never commit
+/.idea/
+/.vscode/
+*.iml

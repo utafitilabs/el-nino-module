@@ -1,0 +1,161 @@
+{# THE OVERVIEW — the settled page's Overview tab, in the shell's frame.
+
+   The four tiles answer the four questions; the fact band says which week,
+   which window, which forecast; then the background, the Pacific, the rain,
+   the exposure, the sources, and the hint at the bottom saying what the page
+   is not. Every plate is the shell's `.c` with its mono tab; every chart is
+   the atlas's; the map is the atlas's. The area's own words — its record of
+   past seasons, the link to the analysis — arrive from the producer section
+   and are printed only where the area wrote them. #}
+{% extends '@UhifadhiElNino/base.html.twig' %}
+
+{% block title %}El Niño watch{% endblock %}
+
+{% block shell_page_title %}{{ area.name }} — El Niño watch{% endblock %}
+
+{% block shell_page_subtitle %}{% for part in reading.verdict %}{% if part.strong %}<b>{{ part.text }}</b>{% else %}{{ part.text }}{% endif %}{% endfor %}{% endblock %}
+
+{% block shell_page_actions %}
+    <a class="cta" href="#exposure">{{ ux_icon('el-nino:map') }}Exposure map</a>
+{% endblock %}
+
+{% block el_nino_page %}
+{% set short = reading.shortRains %}
+{% set outlook = reading.outlook %}
+{% set hot = reading.hotCount %}
+
+<div class="factband">
+    <div class="f"><span class="k">ENSO state</span><span class="v"><span class="chip {{ reading.ensoChip }}">{{ reading.ensoPlain }}</span></span></div>
+    <div class="f"><span class="k">Niño 3.4, week of</span><span class="v">{% if bulletin.ensoWeek %}<time datetime="{{ bulletin.ensoWeek|date('c') }}" data-localtime-format="date">{{ bulletin.ensoWeek|date('Y-m-d') }}</time>{% else %}–{% endif %}<em>CPC</em></span></div>
+    <div class="f"><span class="k">Rain window</span><span class="v">{% if bulletin.rainStart and bulletin.rainEnd %}<time datetime="{{ bulletin.rainStart|date('c') }}" data-localtime-format="date">{{ bulletin.rainStart|date('Y-m-d') }}</time> → <time datetime="{{ bulletin.rainEnd|date('c') }}" data-localtime-format="date">{{ bulletin.rainEnd|date('Y-m-d') }}</time>{% else %}–{% endif %}<em>{{ bulletin.rainDays }} days, CHIRPS prelim</em></span></div>
+    <div class="f"><span class="k">Forecast</span><span class="v">{{ outlook ? outlook.issued : 'not read' }}<em>IRI</em></span></div>
+    <span class="sp"></span>
+    <div class="f"><span class="k">Bulletin built</span><span class="v"><time datetime="{{ bulletin.builtAt|date('c') }}" data-localtime-format="stamp">{{ bulletin.builtAt|date('j M')|lower }} · {{ bulletin.builtAt|date('H:i') }}</time><em>{{ bulletin.producerSlug ?? 'producer' }}</em></span></div>
+</div>
+
+<div class="grid g4">
+    <div class="c kpi{{ reading.isElNino ? ' en-kpi-warm' : '' }}">
+        <span class="tab">How warm is the Pacific?<span class="src">· NOAA CPC</span></span>
+        <b>{% if bulletin.ensoAnomaly is not null %}{{ bulletin.ensoAnomaly >= 0 ? '+' : '−' }}{{ bulletin.ensoAnomaly|abs|number_format(1) }}{% else %}–{% endif %}<em>°C</em></b>
+        <div class="sub"><i class="en-st en-st-{{ reading.ensoChip }}">{{ reading.ensoPlain }}</i> · {{ reading.ensoRun }}</div>
+    </div>
+    <div class="c kpi{{ short and short.el_nino >= 50 ? ' en-kpi-warm' : '' }}">
+        <span class="tab">Will it last into the short rains?<span class="src">· IRI</span></span>
+        {% if short %}
+            <b>{{ short.el_nino }}<em>%</em></b>
+            <div class="sub"><i class="en-st en-st-{{ el_nino_chance_chip(short.el_nino) }}">{{ el_nino_chance(short.el_nino) }}</i> · El Niño in {{ el_nino_season(short.season) }} · IRI {{ outlook.issued }}</div>
+        {% else %}
+            <b>n/a</b>
+            <div class="sub">forecast not read this week</div>
+        {% endif %}
+    </div>
+    <div class="c kpi{{ bulletin.rainPct is not null and bulletin.rainPct >= bulletin.wetThresholdPct ? ' hot' : '' }}">
+        <span class="tab">How wet were the last weeks here?<span class="src">· CHIRPS</span></span>
+        <b>{{ bulletin.rainPct is null ? '–' : bulletin.rainPct|round }}<em>% of normal</em></b>
+        <div class="sub"><i class="en-st en-st-{{ reading.rainChip }}">{{ reading.rainWords }}</i> · {{ bulletin.rainMm is null ? '–' : bulletin.rainMm|round }} mm of {{ bulletin.rainNormalMm is null ? '–' : bulletin.rainNormalMm|round }} mm{% if bulletin.rainStart and bulletin.rainEnd %} · <time datetime="{{ bulletin.rainStart|date('c') }}" data-localtime-format="date">{{ bulletin.rainStart|date('Y-m-d') }}</time> to <time datetime="{{ bulletin.rainEnd|date('c') }}" data-localtime-format="date">{{ bulletin.rainEnd|date('Y-m-d') }}</time>{% endif %}</div>
+    </div>
+    <div class="c kpi{{ hot > 0 ? ' bad' : '' }}">
+        <span class="tab">Who gets cut off if it floods?<span class="src">· the analysis</span></span>
+        <b>{{ reading.cutOff|length }}<em>destinations</em></b>
+        <div class="sub"><i class="en-st en-st-{{ hot > 0 ? 'fail' : 'ok' }}">{{ hot > 0 ? hot ~ ' in a wet cell now' : 'none in a wet cell now' }}</i>{% if reading.cutOffPeople > 0 %} · about {{ reading.cutOffPeople|number_format }} people{% endif %}{% if reading.bomasCutOff is not null %} · {{ reading.bomasCutOff|number_format }} bomas{% endif %}</div>
+    </div>
+</div>
+<p class="en-tiles-note"><b>Reading the tiles.</b> The first is the sea-surface temperature of the central Pacific (Niño 3.4) against its 1991–2020 mean; +0.5 °C sustained is El Niño, ≥ +2 °C very strong. The second is the share of 22 forecast models' scenarios that keep El Niño in the short-rains season. The third is satellite rainfall over the area against the 1981–2025 mean for the same dates. The fourth is the analysis's model of road access once the flagged segments flood, not an observation. The background below explains why the Pacific matters here.</p>
+
+<div class="en-bgwrap">
+    <p class="en-bgline"><b>Why the Pacific matters here.</b> El Niño is a warming of the central Pacific that weakens the trade winds and shifts the tropical rain belt east. Through the Indian Ocean that shift relaxes the dry sinking air over East Africa and enhances the October-to-December short rains; the Indian Ocean Dipole can add to or replace the effect.{% if watch.areaRecord %} {{ watch.areaRecord }}{% endif %}</p>
+    <details class="en-bgd" id="mechanism">
+        <summary>Background in full: the Walker circulation, El Niño, and the East Africa link</summary>
+        <div class="grid g2">
+            <div class="c">
+                <span class="tab">The Pacific in a normal year<span class="src">· after Bonan 2016, Fig. 7.4</span></span>
+                <img class="en-walker" src="{{ asset('bundles/uhifadhielnino/walker-normal.svg') }}" alt="Walker circulation in a normal year: air rises over the warm pool near Indonesia, flows east aloft and sinks over the cool east">
+                <p class="use"><b>The Walker circulation.</b> The trade winds drive the warm surface water west into a pool warmer than 28 °C near Indonesia; cold water rises off South America. Air rises over the warm pool with heavy rain, flows east aloft and sinks over the cool east, where the coast stays dry [5].</p>
+            </div>
+            <div class="c">
+                <span class="tab">El Niño<span class="src">· after Bonan 2016, Fig. 7.7a</span></span>
+                <img class="en-walker" src="{{ asset('bundles/uhifadhielnino/walker-el-nino.svg') }}" alt="Walker circulation during El Niño: the trades weaken, the warm water slides east and the rain follows it">
+                <p class="use"><b>Every few years the trades weaken.</b> The warm water spreads east, the sea off South America becomes two to three degrees warmer than normal, the rain moves to the central Pacific, and the weaker winds let the east warm further until a mature El Niño is in place. The index is the temperature anomaly of that central region [1, 5].</p>
+            </div>
+        </div>
+        <div class="c">
+            <span class="tab">From the Pacific to the short rains<span class="src">· Nicholson 2017 · Saji et al. 1999</span></span>
+            <p class="use"><b>The connection runs through the Indian Ocean.</b> In a normal year air rises over Indonesia and sinks, dry, over the western Indian Ocean and East Africa. During El Niño the rising branch moves east, that sinking relaxes, the western Indian Ocean warms and moist air reaches the coast, so the October-to-December short rains over East Africa are enhanced [6]. The Indian Ocean Dipole (west warm, east cool) strengthens the same flow; it often coincides with El Niño and in some years acts alone [7]. The effect is weak in the March-to-May long rains.</p>
+            {% if watch.areaRecord %}<p class="use"><b>In this area's record</b> [3]: {{ watch.areaRecord }}</p>{% endif %}
+        </div>
+    </details>
+</div>
+
+<h2 class="zone" id="enso">ENSO — the Pacific now, and next</h2>
+<div class="grid g32">
+    <div class="c">
+        <span class="tab">Weekly Niño 3.4 anomaly, the weeks of this bulletin<span class="src">· NOAA CPC, 1991–2020 base</span></span>
+        {% if ninoChart %}{{ atlas_chart(ninoChart) }}{% else %}<p class="use">No weekly readings in this bulletin.</p>{% endif %}
+        <p class="use"><b>{{ el_nino_anomaly(bulletin.ensoAnomaly) }} in the week of {% if bulletin.ensoWeek %}<time datetime="{{ bulletin.ensoWeek|date('c') }}" data-localtime-format="date">{{ bulletin.ensoWeek|date('Y-m-d') }}</time>{% else %}–{% endif %}</b>, {{ reading.ensoRun }}. The line at +0.5 °C is the El Niño threshold; La Niña is below −0.5 °C [1].</p>
+    </div>
+    <div class="c">
+        <span class="tab">Will it stay El Niño?<span class="src">· IRI{% if outlook %}, {{ outlook.issued }}{% endif %}</span></span>
+        {% if outlook and outlookChart %}
+            {{ atlas_chart(outlookChart) }}
+            {% set long = outlook.longRains %}
+            <p class="use"><b>{{ short ? short.el_nino ~ ' % for the short rains' : 'No short-rains season in the window' }}</b>{% if short %} ({{ el_nino_season(short.season) }}){% endif %}{% if long %}, {{ long.el_nino }} % for the long rains{% endif %}. {{ outlook.fadeSentence }} Bars: share of 22 models' scenarios per state [4].</p>
+            <details class="en-fold"><summary>Table of probabilities (%)</summary>
+                <table class="tbl"><tr><th>Season</th><th>El Niño</th><th>Neutral</th><th>La Niña</th></tr>
+                {% for row in outlook.seasons %}<tr><td>{{ row.season }} <span class="mono en-dim">{{ el_nino_season(row.season) }}</span></td><td>{{ row.el_nino }}</td><td>{{ row.neutral }}</td><td>{{ row.la_nina }}</td></tr>{% endfor %}
+                </table>
+            </details>
+        {% else %}
+            <p class="use">The IRI forecast could not be read this week; see <a href="https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/">IRI's ENSO forecast page</a>.</p>
+        {% endif %}
+    </div>
+</div>
+
+<h2 class="zone" id="rain">Rain — the last {{ bulletin.rainDays }} days over the area</h2>
+<div class="c">
+    <span class="tab">Rain, the last {{ bulletin.rainDays }} days, as % of normal<span class="src">· CHIRPS v2.0 prelim daily against 1981–2025</span></span>
+    <p class="use">Mean <b>{{ bulletin.rainMm is null ? '–' : bulletin.rainMm|round }} mm</b> over the area on the 0.05° grid (about 5 km), <b>{{ bulletin.rainPct is null ? '–' : bulletin.rainPct|round }} % of normal</b>; the outlined cells on the exposure map below are at or above {{ bulletin.wetThresholdPct }} % of their 1981–2025 mean for the same dates. Preliminary data, revised later.{% if bulletin.rainMissing %} Missing days: {{ bulletin.rainMissing|join(', ') }}.{% endif %} [2] The week-by-week tab draws every week's grid; <a href="{{ weeksUrl }}">open it</a>.</p>
+</div>
+
+<h2 class="zone" id="exposure">Exposure — if it floods</h2>
+<div class="c en-exposure-plate">
+    <span class="tab">Susceptibility, flagged roads and destinations, with this window's rain<span class="src">· the analysis · CHIRPS · OpenStreetMap</span></span>
+    {{ render_map(map, {'role': 'img', 'aria-label': 'Flood exposure'}) }}
+    <p class="use">Susceptibility classes, roads likely cut or at risk, and the destinations that lose access once they go [3]; the accent cells are this window's rain above {{ bulletin.wetThresholdPct }} % of normal. The legend rows switch layers; hover a road, click a destination.</p>
+</div>
+<div class="grid g2">
+    <div class="c">
+        <span class="tab">Destinations cut off in the model<span class="src">· the analysis</span></span>
+        {% if reading.cutOff %}
+            <table class="tbl"><tr><th>Destination</th><th>Kind</th><th>People, 1.5 km</th><th>Now</th></tr>
+            {% for destination in reading.cutOff %}<tr><td>{{ destination.name }}</td><td>{{ destination.kind ?? '–' }}</td><td>{{ destination.population is null ? '–' : destination.population|number_format }}</td><td>{% if reading.isHot(destination) %}<span class="chip warn">wet now</span>{% endif %}</td></tr>{% endfor %}
+            </table>
+            <p class="use">Cut-off destinations sitting in a much-wetter-than-normal cell this window: <b>{{ reading.hot ? reading.hot|join(', ') : 'none' }}</b>.</p>
+        {% else %}
+            <p class="use">The producer has not sent exposure layers for this area yet, so no destination is listed.</p>
+        {% endif %}
+    </div>
+    {% if reading.run %}
+    <div class="c">
+        <span class="tab">The analysis behind the layers<span class="src">· provenance</span></span>
+        {% set run = reading.run %}
+        <p class="use">Run {% if run.runDate %}<time datetime="{{ run.runDate|date('c') }}" data-localtime-format="date">{{ run.runDate|date('Y-m-d') }}</time>{% else %}on an unrecorded date{% endif %}{% if run.analysisCommit %}, commit <span class="mono">{{ run.analysisCommit|slice(0, 8) }}</span>{% endif %}, imported <time datetime="{{ run.importedAt|date('c') }}" data-localtime-format="stamp">{{ run.importedAt|date('j M')|lower }} · {{ run.importedAt|date('H:i') }}</time>. Roads likely cut: <b>{{ bulletin.exposure.cut ?? '–' }}</b>; at risk: <b>{{ bulletin.exposure.risk ?? '–' }}</b>; destinations cut off: <b>{{ bulletin.exposure.cut_off ?? reading.cutOff|length }}</b>.{% if watch.analysisUrl %} <a href="{{ watch.analysisUrl }}">Read the analysis</a>.{% endif %}</p>
+    </div>
+    {% endif %}
+</div>
+
+<h2 class="zone" id="sources">Sources</h2>
+<ol class="en-refs">
+<li>NOAA Climate Prediction Center. Weekly Niño region SST and anomalies, 1991–2020 base, <a href="https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for">cpc.ncep.noaa.gov</a>. The same feed behind CPC's Weekly ENSO Update.</li>
+<li>Funk, C. et al. (2015). The climate hazards infrared precipitation with stations. <i>Scientific Data</i> 2, 150066, <a href="https://doi.org/10.1038/sdata.2015.66">doi:10.1038/sdata.2015.66</a>. Data: CHIRPS v2.0 preliminary and final daily, 0.05°, Climate Hazards Center, UC Santa Barbara, <a href="https://data.chc.ucsb.edu/products/CHIRPS-2.0/">data.chc.ucsb.edu</a>.</li>
+<li>The flood-exposure analysis behind the susceptibility, the flagged roads and the destinations{% if watch.analysisUrl %}, <a href="{{ watch.analysisUrl }}">{{ watch.analysisUrl }}</a>{% endif %}. Susceptibility from Copernicus DEM, CHIRPS, ESA WorldCover; roads and places from OpenStreetMap; population from WorldPop 2020; boundary from the WDPA. Full references in the analysis.</li>
+<li>International Research Institute for Climate and Society (IRI), Columbia Climate School. CCSR/IRI model-based probabilistic ENSO forecast, <a href="https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/">iri.columbia.edu</a>, CC BY 4.0. IRI publishes the chart only; the percentages are recovered from the bar heights of {% if outlook and outlook.figureUrl %}<a href="{{ outlook.figureUrl }}">the figure</a>{% else %}the figure{% endif %}. The official NOAA CPC forecast can differ slightly from this model-based one.</li>
+<li>Bonan, G. B. (2016). <i>Ecological Climatology: Concepts and Applications</i>, 3rd ed. Cambridge University Press, chapter 7 (El Niño/Southern Oscillation, pp. 105–109, Figs. 7.4 and 7.7). <a href="https://doi.org/10.1017/CBO9781107339200">doi:10.1017/CBO9781107339200</a>.</li>
+<li>Nicholson, S. E. (2017). Climate and climatic variability of rainfall over eastern Africa. <i>Reviews of Geophysics</i> 55(3), 590–635. <a href="https://doi.org/10.1002/2016RG000544">doi:10.1002/2016RG000544</a>.</li>
+<li>Saji, N. H., Goswami, B. N., Vinayachandran, P. N. and Yamagata, T. (1999). A dipole mode in the tropical Indian Ocean. <i>Nature</i> 401, 360–363. <a href="https://doi.org/10.1038/43854">doi:10.1038/43854</a>.</li>
+</ol>
+
+{{ include('@Shell/_page_hint.html.twig', {
+    lead: 'What this page is not.',
+    say: 'The susceptibility is a relative ranking for an El Niño short-rain season, not a flood depth or a forecast, and it has not yet been validated against observed floods. Roads and ranger posts come from OpenStreetMap and are incomplete. El Niño raises the odds of a wet season; it does not guarantee one, and the Indian Ocean Dipole matters as much, so the regional seasonal forecast should be read alongside this page.',
+}, with_context: false) }}
+{% endblock %}

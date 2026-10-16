@@ -1,0 +1,22 @@
+{# THE WATCH BEFORE ITS FIRST BULLETIN: an empty state, never a page of noughts.
+   It says what is missing and where it is set, and nothing else. #}
+{% extends '@UhifadhiElNino/base.html.twig' %}
+
+{% block title %}El Niño watch{% endblock %}
+
+{% block shell_page_title %}{{ area.name }} — El Niño watch{% endblock %}
+
+{% block shell_page_subtitle %}The Pacific this week, the chance El Niño lasts into the short rains, the rain of the last weeks here, and who loses road access if it floods — one bulletin a week, from the producer this area names.{% endblock %}
+
+{% block el_nino_page %}
+<div class="c en-empty">
+    <span class="tab">No bulletin yet<span class="src">· the producer has not posted one</span></span>
+    {% if watch is null or watch.producerSlug is null %}
+        <p class="use">This area names no producer yet. Open <b>Configure › Producer</b>, name the producer that builds this area's watch, issue it a token, and the first bulletin draws this page.</p>
+    {% elseif not watch.hasToken %}
+        <p class="use">This area reads from <b>{{ watch.producerSlug }}</b>, but no token has been issued. Open <b>Configure › Producer</b> and issue one; the producer posts with it.</p>
+    {% else %}
+        <p class="use">This area reads from <b>{{ watch.producerSlug }}</b> and a token was issued{% if watch.tokenIssuedAt %} on <time datetime="{{ watch.tokenIssuedAt|date('c') }}" data-localtime-format="stamp">{{ watch.tokenIssuedAt|date('j M')|lower }} · {{ watch.tokenIssuedAt|date('H:i') }}</time>{% endif %}. The page draws the moment the producer's first push arrives.</p>
+    {% endif %}
+</div>
+{% endblock %}

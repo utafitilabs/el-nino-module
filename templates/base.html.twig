@@ -1,0 +1,29 @@
+{# Bundle base: the SHELL's page frame plus the sheets a watch screen needs.
+
+   THE FRAME IS SHELLBUNDLE'S. The trail, the page head, the area's tab strip
+   and the flashes are the frame's sockets; this file types no copies of them.
+
+   THE TAB STRIP IS LEFT AT ITS DEFAULT: the watch is an AREA-SCOPED module,
+   every route sits at /areas/{uuid}/modules/elnino, and the module's own
+   tabs (Overview · Week by week) are declared through ModuleTabsInterface and
+   drawn by the shell.
+
+   Ordered atlas → own, weakest to strongest: the module's sheet is the one
+   allowed to override, and it is last. The atlas's sheets are linked by the
+   shell's stylesheet chain where a plate is drawn; the map sheet is named
+   here because every screen of this module carries a plate. #}
+{% extends '@Shell/page.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset(constant('Uhifadhi\\ElNino\\UhifadhiElNinoBundle::STYLESHEET')) }}">
+{% endblock %}
+
+{% block shell_breadcrumbs %}
+    <a href="{{ path('area_index') }}">areas</a> /
+    <a href="{{ path('area_show', {uuid: area.uuid}) }}">{{ area.name|lower }}</a> /
+    <a href="{{ path('area_modules', {uuid: area.uuid}) }}">modules</a> /
+    {% block el_nino_trail_tail %}el niño watch{% endblock %}
+{% endblock %}
+
+{% block shell_page %}{% block el_nino_page %}{% endblock %}{% endblock %}

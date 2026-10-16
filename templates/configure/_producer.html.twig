@@ -1,0 +1,63 @@
+{# THE PRODUCER SECTION OF THE EL NIÑO WATCH CONFIGURE PAGE — body only.
+
+   NO HEAD, NO STRIP, NO CRUMB, NO WAY BACK: the shell draws all four.
+
+   Three things, three forms: the words (the producer's slug, the link to the
+   analysis, the area's own record paragraph), the token issued, and the token
+   withdrawn. A token is printed exactly once, on the page the issue lands on,
+   and never again. It spends only the platform's vocabulary — .c, .frow, .fld,
+   .staddrow — because the shell's sheet is the only one linked here. #}
+
+<form method="post" action="{{ path('el_nino_producer_save', {uuid: area.uuid}) }}">
+<input type="hidden" name="_token" value="{{ csrfToken }}">
+<div class="c en-section">
+    <span class="tab">Producer<span class="src">· who builds this area's bulletin</span></span>
+    <p class="use">A producer builds the weekly bulletin — the Pacific, the outlook, the rain grids, the exposure layers — and posts it here. Every file it sends names the area by this slug; a bulletin about any other area is refused.</p>
+    <div class="frow">
+        <label for="en-producer-slug">producer slug</label>
+        <div class="en-field">
+            <input class="fld" id="en-producer-slug" type="text" name="producer_slug" value="{{ watch.producerSlug }}" maxlength="40" pattern="[a-z0-9][a-z0-9-]{0,39}" placeholder="for example kilimani-watch">
+            <span class="use">lowercase letters, digits and hyphens — the `area.slug` the producer writes into every file.</span>
+        </div>
+    </div>
+    <div class="frow">
+        <label for="en-analysis-url">analysis link</label>
+        <div class="en-field">
+            <input class="fld" id="en-analysis-url" type="url" name="analysis_url" value="{{ watch.analysisUrl }}" maxlength="255" placeholder="https://…">
+            <span class="use">where the flood-exposure analysis can be read; printed in the sources where set.</span>
+        </div>
+    </div>
+    <div class="frow">
+        <label for="en-area-record">this area's record</label>
+        <div class="en-field">
+            <textarea class="fld" id="en-area-record" name="area_record" rows="4" maxlength="2000" placeholder="What past El Niño short-rain seasons did on this ground, in one or two sentences.">{{ watch.areaRecord }}</textarea>
+            <span class="use">one paragraph in the area's own words, printed under the background; left empty, nothing is printed.</span>
+        </div>
+    </div>
+</div>
+<div class="staddrow">
+    <a class="tgl" href="{{ path('el_nino_watch', {uuid: area.uuid}) }}">Cancel</a>
+    <button class="cta" type="submit">Save</button>
+</div>
+</form>
+
+<div class="c en-section">
+    <span class="tab">Token<span class="src">· {{ watch.hasToken ? 'issued' : 'none issued' }}</span></span>
+    {% if issuedToken %}
+        <p class="use"><b>Copy this token now.</b> It is printed once and kept here only as a hash.</p>
+        <pre class="en-token mono">{{ issuedToken }}</pre>
+    {% endif %}
+    <p class="use">The producer posts each build with <span class="mono">Authorization: Bearer &lt;token&gt;</span> to <span class="mono">{{ absolute_url(path('el_nino_ingest')) }}</span>, one multipart part per file under its contract path. {% if watch.hasToken %}A token was issued{% if watch.tokenIssuedAt %} <time datetime="{{ watch.tokenIssuedAt|date('c') }}" data-localtime-format="stamp">{{ watch.tokenIssuedAt|date('j M')|lower }} · {{ watch.tokenIssuedAt|date('H:i') }}</time>{% endif %}{% if watch.lastIngestAt %}; the last bulletin arrived <time datetime="{{ watch.lastIngestAt|date('c') }}" data-localtime-format="stamp">{{ watch.lastIngestAt|date('j M')|lower }} · {{ watch.lastIngestAt|date('H:i') }}</time>{% else %}; no bulletin has arrived with it yet{% endif %}. Issuing another replaces it.{% else %}No producer can post until one is issued.{% endif %}</p>
+    <div class="staddrow">
+        {% if watch.hasToken %}
+        <form method="post" action="{{ path('el_nino_producer_token_withdraw', {uuid: area.uuid}) }}">
+            <input type="hidden" name="_token" value="{{ csrfToken }}">
+            <button class="tgl" type="submit">Withdraw the token</button>
+        </form>
+        {% endif %}
+        <form method="post" action="{{ path('el_nino_producer_token', {uuid: area.uuid}) }}">
+            <input type="hidden" name="_token" value="{{ csrfToken }}">
+            <button class="cta" type="submit">{{ watch.hasToken ? 'Issue a new token' : 'Issue a token' }}</button>
+        </form>
+    </div>
+</div>

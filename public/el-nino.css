@@ -1,0 +1,94 @@
+/* El Niño watch screen styles — what this module adds on top of the shell's
+   design system. What ShellBundle ships (.c/.tab/.src, .kpi, .chip, .tbl,
+   .factband, .grid, h2.zone, .use, .pghint, .frow/.fld/.staddrow, the token
+   channels --c-*) is REUSED, never redefined here. The charts and the maps are
+   the atlas's components and this sheet says nothing about them. Every class
+   below is en-prefixed so it can never collide with a shell class.
+
+   Colours come from the shell's tokens (rgb(var(--c-*))) so the module flips
+   with the theme. Shipped with the bundle and linked only where the module
+   renders (templates/base.html.twig). */
+
+/* ---- the state word inside a tile's subline ---------------------------- */
+.en-st { font-style: normal; font-weight: 700; }
+.en-st-fail { color: rgb(var(--c-fail)); }
+.en-st-warn { color: rgb(var(--c-warn)); }
+.en-st-ok { color: rgb(var(--c-ok)); }
+.en-st-acc { color: rgb(var(--c-acc)); }
+.en-st-idle { color: rgb(var(--c-fog)); }
+
+/* A tile whose figure is a warning rather than an accent: the Pacific in El
+   Niño range, the outlook at an even chance or more. The shell's .kpi.hot is
+   the accent; this is the failure colour on the figure with the same border. */
+.en-kpi-warm b { color: rgb(var(--c-fail)); }
+.en-kpi-warm { border-color: color-mix(in srgb, rgb(var(--c-fail)) 45%, var(--c-ln)); }
+
+/* ---- the reading note under the tiles ---------------------------------- */
+.en-tiles-note { font-size: 12px; color: rgb(var(--c-dim)); line-height: 1.6; margin: -6px 0 0; max-width: 110ch; }
+.en-tiles-note b { color: rgb(var(--c-fog)); }
+
+/* ---- the background: one line, then the whole story folded ------------- */
+.en-bgwrap { margin: 18px 0 0; border: 1px dashed color-mix(in srgb, rgb(var(--c-acc)) 42%, transparent); border-radius: 12px; padding: 13px 15px 10px; }
+.en-bgline { font-size: 12.5px; color: rgb(var(--c-fog)); line-height: 1.6; margin: 0 0 10px; }
+.en-bgline b { color: rgb(var(--c-tx)); }
+.en-bgd { margin: 0; }
+.en-bgd > summary {
+    display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px; padding: 6px 12px;
+    border: 1px solid var(--c-ln2); border-radius: 9px; color: rgb(var(--c-fog));
+    font: 600 11px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; list-style: none;
+}
+.en-bgd:not([open]) > summary { margin: 0; }
+.en-bgd > summary::before { content: "▸"; color: rgb(var(--c-acc)); }
+.en-bgd[open] > summary::before { content: "▾"; }
+.en-bgd > summary:hover { color: rgb(var(--c-tx)); border-color: rgb(var(--c-fog)); }
+.en-bgd > .grid { margin-top: 4px; }
+.en-bgd > .c { margin-top: 20px; }
+
+/* The two schematics are images: a diagram is not an icon, and it ships
+   with its own colours chosen to read on both themes. */
+.en-walker { display: block; width: 100%; height: auto; margin: 4px 0 2px; border-radius: 8px; }
+
+/* ---- the outlook's table, folded ----------------------------------------- */
+.en-fold > summary {
+    cursor: pointer; font: 600 9.5px/1.4 var(--font-mono); letter-spacing: .14em; text-transform: uppercase;
+    color: rgb(var(--c-fog)); margin: 12px 0 8px; list-style: none;
+}
+.en-fold > summary::before { content: "▸ "; color: rgb(var(--c-acc)); }
+.en-fold[open] > summary::before { content: "▾ "; }
+.en-dim { color: rgb(var(--c-dim)); }
+
+/* ---- the plates' heights --------------------------------------------------
+   The plate's layout is the atlas's; only the number is ours. */
+.en-exposure-plate { --map-plate-height: min(68vh, 680px); }
+.en-week-plate { --map-plate-height: min(56vh, 540px); }
+
+/* ---- week by week: the control row --------------------------------------- */
+.en-ctl { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: center; margin: 0 0 18px; }
+.en-pill {
+    height: 32px; border: 1px solid var(--c-ln2); border-radius: 999px; padding: 0 12px; display: inline-flex; align-items: center; gap: 8px;
+    background: rgb(var(--c-p1)); font: 600 9.5px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: rgb(var(--c-fog));
+}
+.en-pill select { height: 28px; border: 0; background: transparent; color: rgb(var(--c-tx)); font: 12.5px var(--font-body); padding: 0 2px; max-width: 240px; }
+.en-pill input[type=checkbox] { accent-color: rgb(var(--c-acc)); }
+.en-range { flex: 1 1 220px; min-width: 140px; accent-color: rgb(var(--c-acc)); }
+.en-ctl .tgl[aria-disabled="true"] { opacity: .4; pointer-events: none; }
+.en-ctl .tgl svg { width: 16px; height: 16px; }
+
+/* ---- the weeks table ----------------------------------------------------- */
+.en-weeks td a { color: inherit; text-decoration: none; }
+.en-weeks tr.on td { background: color-mix(in srgb, rgb(var(--c-acc)) 9%, transparent); }
+
+/* ---- the sources ----------------------------------------------------------- */
+.en-refs { font-size: 12.5px; color: rgb(var(--c-fog)); line-height: 1.6; padding-left: 20px; }
+.en-refs li { margin-bottom: 6px; }
+
+/* ---- the empty state and the configure section ----------------------------- */
+.en-empty { max-width: 72ch; }
+.en-section { margin-bottom: 20px; }
+.en-field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.en-field .use { margin: 0; }
+.en-field textarea.fld { min-height: 96px; resize: vertical; }
+.en-token {
+    margin: 4px 0 12px; padding: 12px 14px; border: 1px dashed color-mix(in srgb, rgb(var(--c-acc)) 55%, transparent);
+    border-radius: 10px; background: rgb(var(--c-p2)); color: rgb(var(--c-tx)); font-size: 12.5px; overflow-wrap: anywhere; white-space: pre-wrap;
+}

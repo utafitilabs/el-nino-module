@@ -1,0 +1,79 @@
+{# WEEK BY WEEK — the settled page's second tab: the two signals over the
+   bulletin's weeks, the picked week's rain on the plate, its one-sentence
+   caption, and the table of weeks.
+
+   The pick is an address (?week=N), so a week is a link somebody can send,
+   and the page is whole without a line of JavaScript: the select, the two
+   arrows and the table rows all navigate. The range input is the one control
+   that needs a hand — the `weeks` controller follows it to the same address. #}
+{% extends '@UhifadhiElNino/base.html.twig' %}
+
+{% block title %}Week by week{% endblock %}
+
+{% block el_nino_trail_tail %}<a href="{{ path('el_nino_watch', {uuid: area.uuid}) }}">el niño watch</a> / week by week{% endblock %}
+
+{% block shell_page_title %}{{ area.name }} — El Niño watch, week by week{% endblock %}
+
+{% block shell_page_subtitle %}The last {{ weeks|length }} weeks: the Pacific's Niño 3.4 reading and the rain over the area against its normal, and where each week's rain fell.{% endblock %}
+
+{% block el_nino_page %}
+{% set threshold = bulletin.wetThresholdPct %}
+{% if week is null %}
+    <div class="c"><span class="tab">No weeks<span class="src">· the bulletin carries none</span></span><p class="use">The producer's bulletin carries no week-by-week series.</p></div>
+{% else %}
+{% set here = path('el_nino_weeks', {uuid: area.uuid}) %}
+{% set field = millimetres ? 'mm' : 'pct' %}
+<form class="en-ctl" method="get" action="{{ here }}"
+      data-controller="{{ constant('Uhifadhi\\ElNino\\UhifadhiElNinoBundle::CONTROLLER_PREFIX') }}weeks">
+    <a class="tgl" href="{{ here }}?{{ weekParameter }}={{ picked > 0 ? picked - 1 : 0 }}&{{ fieldParameter }}={{ field }}" aria-label="Earlier week"{{ picked > 0 ? '' : ' aria-disabled="true"' }}>{{ ux_icon('el-nino:chevron-left') }}</a>
+    <label class="en-pill">Week ·
+        <select name="{{ weekParameter }}" data-action="change->{{ constant('Uhifadhi\\ElNino\\UhifadhiElNinoBundle::CONTROLLER_PREFIX') }}weeks#go">
+            {% for w in weeks %}<option value="{{ loop.index0 }}"{{ loop.index0 == picked ? ' selected' : '' }}>{{ w.label }}</option>{% endfor %}
+        </select>
+    </label>
+    <input class="en-range" type="range" name="{{ weekParameter }}-range" min="0" max="{{ weeks|length - 1 }}" step="1" value="{{ picked }}" aria-label="Week"
+           data-action="change->{{ constant('Uhifadhi\\ElNino\\UhifadhiElNinoBundle::CONTROLLER_PREFIX') }}weeks#slide">
+    <a class="tgl" href="{{ here }}?{{ weekParameter }}={{ picked < weeks|length - 1 ? picked + 1 : picked }}&{{ fieldParameter }}={{ field }}" aria-label="Later week"{{ picked < weeks|length - 1 ? '' : ' aria-disabled="true"' }}>{{ ux_icon('el-nino:chevron-right') }}</a>
+    <label class="en-pill"><input type="checkbox" name="{{ fieldParameter }}" value="mm"{{ millimetres ? ' checked' : '' }} data-action="change->{{ constant('Uhifadhi\\ElNino\\UhifadhiElNinoBundle::CONTROLLER_PREFIX') }}weeks#go"> mm instead of % of normal</label>
+    <noscript><button class="cta" type="submit">Show</button></noscript>
+</form>
+
+<div class="grid g2">
+    <div class="c">
+        <span class="tab">The Pacific, week by week<span class="src">· NOAA CPC</span></span>
+        {{ atlas_chart(ninoChart) }}
+        <p class="use">Niño 3.4 anomaly per week, the CPC week nearest each calendar week. The line at +0.5 °C is the El Niño threshold [1].</p>
+    </div>
+    <div class="c">
+        <span class="tab">Rain over the area, week by week<span class="src">· CHIRPS</span></span>
+        {{ atlas_chart(rainChart) }}
+        <p class="use">Mean rain over the area per week against the 1981–2025 normal for the same dates [2].</p>
+    </div>
+</div>
+
+<div class="c en-week-plate">
+    <span class="tab">Where the selected week's rain fell<span class="src">· {{ week.label }} · {{ millimetres ? 'mm' : '% of normal' }}</span></span>
+    {{ render_map(weekMap, {'role': 'img', 'aria-label': 'Rain over the area in the week of ' ~ week.label}) }}
+    <p class="use" id="en-week-caption"><b>{{ week.label }}.</b> {{ caption }}</p>
+</div>
+
+<div class="c">
+    <span class="tab">The weeks<span class="src">· a row opens its week</span></span>
+    <table class="tbl en-weeks">
+        <tr><th>Week</th><th>Days</th><th>Rain (mm)</th><th>Normal (mm)</th><th>% of normal</th><th>Cells ≥ {{ threshold }} %</th><th>Niño 3.4 (°C)</th><th>Cut-off destinations in a wet cell</th></tr>
+        {% for w in weeks %}
+        <tr class="{{ loop.index0 == picked ? 'on' : '' }}">
+            <td><a href="{{ here }}?{{ weekParameter }}={{ loop.index0 }}&{{ fieldParameter }}={{ field }}">{{ w.label }}</a></td>
+            <td>{{ w.days }}</td>
+            <td>{{ w.mm|number_format(1) }}</td>
+            <td>{{ w.normalMm|number_format(1) }}</td>
+            <td>{{ w.pct is null ? '–' : w.pct|round }}</td>
+            <td>{{ w.wetCells }}</td>
+            <td>{{ w.ninoAnomaly is null ? '–' : (w.ninoAnomaly > 0 ? '+' : '') ~ w.ninoAnomaly|number_format(1) }}</td>
+            <td>{{ w.hot|join(', ') }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endif %}
+{% endblock %}
