@@ -60,6 +60,9 @@
 /* ---- the plates' heights --------------------------------------------------
    The plate's layout is the atlas's; only the number is ours. */
 .en-exposure-plate { --map-plate-height: min(68vh, 680px); }
+.en-circ-plate { --map-plate-height: 380px; margin-bottom: 20px; }
+.en-state-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+.en-state-k { font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: rgb(var(--c-dim)); }
 .en-week-plate { --map-plate-height: min(56vh, 540px); }
 .en-rain-plate { --map-plate-height: 380px; }
 

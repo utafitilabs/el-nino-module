@@ -130,6 +130,14 @@ final readonly class WatchReading
         return \in_array($destination->getName(), $this->hot, true);
     }
 
+    /** How many bomas the producer routed, where it routed households. */
+    public function bomasRouted(): ?int
+    {
+        $count = $this->bulletin->getExposure()['bomas_total'] ?? null;
+
+        return \is_int($count) ? $count : null;
+    }
+
     /** How many bomas the current run says lose road access, where the producer routed households. */
     public function bomasCutOff(): ?int
     {

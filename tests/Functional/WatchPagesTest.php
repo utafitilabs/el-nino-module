@@ -72,11 +72,24 @@ final class WatchPagesTest extends WebTestCase
         self::assertStringContainsString('Salt Pans Village', $html, 'the cut-off register');
         self::assertStringContainsString('Two of the four El Niño seasons on record', $html, 'the area\'s own record');
         self::assertStringContainsString('https://example.test/analysis', $html);
-        self::assertSame(3, $crawler->filter('[data-atlas-plate]')->count(), 'the two rain plates and the exposure plate, all the atlas\'s');
+        self::assertSame(4, $crawler->filter('[data-atlas-plate]')->count(), 'the circulation plate, the two rain plates and the exposure plate, all the atlas\'s');
         self::assertStringContainsString('What this page is not.', $html);
         self::assertStringContainsString('Roads and places come from the reserve&#039;s own road and station registers.', $html, 'the caveat names the sources the provenance names');
         self::assertStringNotContainsString('OpenStreetMap', $html, 'and no source the producer did not name');
         self::assertStringNotContainsString('PL·0', $html, 'no workshop labels');
+    }
+
+    public function testTheBackgroundPlateDrawsTheStateTheAddressAsksFor(): void
+    {
+        $this->signIn($this->client, $this->em);
+        $crawler = $this->client->request('GET', '/areas/'.$this->area->getUuidString().'/modules/elnino?circulation=nino');
+
+        self::assertResponseIsSuccessful();
+        $html = (string) $this->client->getResponse()->getContent();
+        self::assertSame(4, $crawler->filter('[data-atlas-plate]')->count(), 'the circulation plate joins the three');
+        self::assertSame('El Niño', trim($crawler->filter('.en-state-row a.on')->text()));
+        self::assertStringContainsString('<b>El Niño.</b> The trade winds weaken', $html);
+        self::assertStringContainsString('Positive Indian Ocean Dipole', $html);
     }
 
     public function testTheWeekByWeekTabOpensOnTheNewestWeekAndWalksByAddress(): void

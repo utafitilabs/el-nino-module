@@ -181,6 +181,7 @@ final class UhifadhiElNinoBundle extends AbstractBundle
                     service('el_nino.exposure_map'),
                     service('el_nino.charts'),
                     service('el_nino.weeks'),
+                    service('el_nino.circulation'),
                     service('router'),
                 ])
                 ->public();

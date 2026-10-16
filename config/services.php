@@ -33,6 +33,7 @@ use Uhifadhi\ElNino\Repository\BulletinRepository;
 use Uhifadhi\ElNino\Repository\ExposureRunRepository;
 use Uhifadhi\ElNino\Service\BulletinIngestService;
 use Uhifadhi\ElNino\Service\ChartService;
+use Uhifadhi\ElNino\Service\CirculationService;
 use Uhifadhi\ElNino\Service\ExposureMapService;
 use Uhifadhi\ElNino\Service\ProducerPayloadReader;
 use Uhifadhi\ElNino\Service\WatchReader;
@@ -104,6 +105,9 @@ return static function (ContainerConfigurator $container): void {
             service(MapBuilderInterface::class),
             service('area.map_payload'),
         ]);
+
+    $services->set('el_nino.circulation', CirculationService::class)
+        ->args([service(MapBuilderInterface::class)]);
 
     $services->set('el_nino.weeks', WeeksService::class)
         ->args([param('el_nino.weeks_shown')]);

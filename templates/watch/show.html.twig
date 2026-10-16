@@ -56,8 +56,13 @@
     </div>
     <div class="c kpi{{ hot > 0 ? ' bad' : '' }}">
         <span class="tab">Who gets cut off if it floods?<span class="src">· analysis</span></span>
-        <b>{{ reading.cutOff|length }}<em>destinations</em></b>
-        <div class="sub"><i class="en-st en-st-{{ hot > 0 ? 'fail' : 'ok' }}">{{ hot > 0 ? hot ~ ' in a wet cell now' : 'none in a wet cell now' }}</i>{% if reading.cutOffPeople > 0 %} · about {{ reading.cutOffPeople|number_format }} people{% endif %}{% if reading.bomasCutOff is not null %} · {{ reading.bomasCutOff|number_format }} bomas{% endif %}</div>
+        {% if reading.bomasCutOff is not null %}
+            <b>{{ reading.bomasCutOff|number_format }}<em>active bomas</em></b>
+            <div class="sub"><i class="en-st en-st-{{ hot > 0 ? 'fail' : 'ok' }}">{{ hot > 0 ? hot ~ ' village' ~ (hot == 1 ? '' : 's') ~ ' in a wet cell now' : 'none in a wet cell now' }}</i>{% if reading.bomasRouted is not null %} · of {{ reading.bomasRouted|number_format }} routed{% endif %} · {{ reading.cutOff|length }} village centre{{ reading.cutOff|length == 1 ? '' : 's' }}</div>
+        {% else %}
+            <b>{{ reading.cutOff|length }}<em>destinations</em></b>
+            <div class="sub"><i class="en-st en-st-{{ hot > 0 ? 'fail' : 'ok' }}">{{ hot > 0 ? hot ~ ' in a wet cell now' : 'none in a wet cell now' }}</i>{% if reading.cutOffPeople > 0 %} · about {{ reading.cutOffPeople|number_format }} people{% endif %}</div>
+        {% endif %}
     </div>
 </div>
 <p class="en-tiles-note"><b>Reading the tiles.</b> The first is the sea-surface temperature of the central Pacific (Niño 3.4) against its 1991–2020 mean; +0.5 °C sustained is El Niño, ≥ +2 °C very strong. The second is the share of 22 forecast models' scenarios that keep El Niño in the short-rains season. The third is satellite rainfall over the area against the 1981–2025 mean for the same dates. The fourth is the analysis's model of road access once the flagged segments flood, not an observation. The background below explains why the Pacific matters here.</p>
@@ -66,6 +71,15 @@
     <p class="en-bgline"><b>Why the Pacific matters here.</b> El Niño is a warming of the central Pacific that weakens the trade winds and shifts the tropical rain belt east. Through the Indian Ocean that shift relaxes the dry sinking air over East Africa and enhances the October-to-December short rains; the Indian Ocean Dipole can add to or replace the effect.{% if watch.areaRecord %} {{ watch.areaRecord }}{% endif %}</p>
     <details class="en-bgd" id="mechanism">
         <summary>Background in full: the Walker circulation, El Niño, and the East Africa link</summary>
+        <div class="c en-circ-plate">
+            <span class="tab">The two circulations: a normal year, El Niño, the Indian Ocean Dipole<span class="src">· after Bonan 2016 · Nicholson 2017 · Saji et al. 1999</span></span>
+            <div class="en-state-row"><span class="mono en-state-k">State</span>
+                {% for state in circulationStates %}<a class="btn sm{{ state == circulation ? ' on' : '' }}" href="{{ path('el_nino_watch', {uuid: area.uuid}) }}?{{ circulationParameter }}={{ state.value }}#mechanism">{{ state.label }}</a>{% endfor %}
+            </div>
+            {{ render_map(circulationMap, {'role': 'img', 'aria-label': 'The two circulations along the equator, ' ~ circulation.label|lower}) }}
+            <p class="use" id="en-circ-caption"><b>{{ circulation.lead }}</b> {{ circulation.caption }}</p>
+            <p class="use">Plan view along the equator. Two loops share the rising branch over Indonesia: the Pacific Walker cell, whose side-on section is the pair below, and the Indian Ocean cell, whose sinking branch lies over East Africa. Positions are schematic; the box is the Niño 3.4 region whose temperature the index on this page measures.</p>
+        </div>
         <div class="grid g2">
             <div class="c">
                 <span class="tab">The Pacific in a normal year<span class="src">· after Bonan 2016, Fig. 7.4</span></span>

@@ -23,8 +23,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Environment;
 use Uhifadhi\Bundle\AreaBundle\Entity\AreaOfInterest;
 use Uhifadhi\Bundle\RegistryBundle\RegistryBundle;
+use Uhifadhi\ElNino\Model\Circulation;
 use Uhifadhi\ElNino\Module\ElNinoModuleProvider;
 use Uhifadhi\ElNino\Service\ChartService;
+use Uhifadhi\ElNino\Service\CirculationService;
 use Uhifadhi\ElNino\Service\ExposureMapService;
 use Uhifadhi\ElNino\Service\WatchReader;
 use Uhifadhi\ElNino\Service\WeeksService;
@@ -45,12 +47,16 @@ final readonly class WatchController
     /** The query parameter that switches the week's map from percent of normal to millimetres. */
     public const string FIELD_PARAMETER = 'field';
 
+    /** The query parameter that picks the state the background plate draws. */
+    public const string CIRCULATION_PARAMETER = 'circulation';
+
     public function __construct(
         private Environment $twig,
         private WatchReader $reader,
         private ExposureMapService $maps,
         private ChartService $charts,
         private WeeksService $weeks,
+        private CirculationService $circulation,
         private UrlGeneratorInterface $router,
     ) {
     }
@@ -58,6 +64,7 @@ final readonly class WatchController
     #[Route('/areas/{uuid}/modules/elnino', name: 'el_nino_watch', requirements: ['uuid' => Requirement::UUID], methods: ['GET'])]
     #[IsGranted('el-nino.read', subject: 'area')]
     public function watch(
+        Request $request,
         #[MapEntity(mapping: ['uuid' => 'uuid'])] AreaOfInterest $area,
     ): Response {
         $reading = $this->reader->read($area);
@@ -69,9 +76,14 @@ final readonly class WatchController
         }
 
         $weeks = $this->weeks->weeks($reading->bulletin);
+        $state = Circulation::fromQuery($request->query->getString(self::CIRCULATION_PARAMETER));
 
         return new Response($this->twig->render('@UhifadhiElNino/watch/show.html.twig', [
             'area' => $area,
+            'circulation' => $state,
+            'circulationStates' => Circulation::cases(),
+            'circulationMap' => $this->circulation->plate($state),
+            'circulationParameter' => self::CIRCULATION_PARAMETER,
             'reading' => $reading,
             'bulletin' => $reading->bulletin,
             'watch' => $reading->watch,
