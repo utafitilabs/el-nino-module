@@ -101,6 +101,19 @@ final class IngestEndpointTest extends WebTestCase
         self::assertResponseStatusCodeSame(202);
     }
 
+    public function testThePartsArriveUnderThePhpNamesARealRequestGivesThem(): void
+    {
+        $parts = [];
+        foreach ($this->files() as $path => $file) {
+            $parts[strtr($path, ['.' => '_'])] = $file;
+        }
+        self::assertArrayHasKey('status_json', $parts);
+        self::assertArrayHasKey('map/roads_geojson', $parts);
+        $this->client->request('POST', IngestController::PATH, [], $parts, ['HTTP_AUTHORIZATION' => 'Bearer '.$this->token]);
+
+        self::assertResponseStatusCodeSame(202);
+    }
+
     public function testNoTokenIsUnauthorized(): void
     {
         $this->push($this->files(), null);

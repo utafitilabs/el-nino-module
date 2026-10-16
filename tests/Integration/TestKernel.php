@@ -80,6 +80,8 @@ final class TestKernel extends Kernel
             'php_errors' => ['log' => true],
             'session' => ['storage_factory_id' => 'session.storage.factory.mock_file'],
             'csrf_protection' => ['enabled' => true],
+            // The ingest limiter counts in cache.app; in memory, a suite run starts the minute afresh.
+            'cache' => ['app' => 'cache.adapter.array'],
             'property_access' => true,
             'property_info' => ['enabled' => true],
             'serializer' => ['enabled' => true],

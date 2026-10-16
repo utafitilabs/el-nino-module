@@ -91,7 +91,7 @@ final readonly class IngestController
 
         $parts = [];
         foreach (self::PARTS as $path => $name) {
-            foreach ([$path, $name, basename($path)] as $key) {
+            foreach ([$path, self::asPhpNamesIt($path), $name, basename($path), self::asPhpNamesIt(basename($path))] as $key) {
                 $text = $this->part($request, $key);
                 if (null === $text) {
                     continue;
@@ -127,6 +127,19 @@ final readonly class IngestController
     }
 
     /** A part's text: an uploaded file, or a plain field where the producer sent one. */
+    /**
+     * PHP rewrites a dot or a space in a multipart part's name to an underscore
+     * before the request reaches the application ("status.json" arrives as
+     * "status_json", "map/roads.geojson" as "map/roads_geojson"), so a part
+     * named by its contract path is looked up under that name too.
+     *
+     * @see https://www.php.net/manual/en/language.variables.external.php — "Dots and spaces in variable names are converted to underscores."
+     */
+    private static function asPhpNamesIt(string $name): string
+    {
+        return strtr($name, ['.' => '_', ' ' => '_']);
+    }
+
     private function part(Request $request, string $key): ?string
     {
         $file = $request->files->get($key);
