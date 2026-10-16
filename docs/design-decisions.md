@@ -105,9 +105,10 @@ producer's contract carries the record itself.
 - **The two signals in one figure, and the ENSO bands** are ported whole since
   core 0.1.28: the Pacific chart shades the El Niño and La Niña ranges and
   marks the last reading; the week-by-week figure is two atlas panels on one
-  week axis (`ChartPanel::Upper` and `Lower`), the Niño line above with the
-  picked week marked, the rain as bars against a dashed normal below, the
-  picked week banded through both. The owner chose this shape (option B of
+  week axis (`ChartPanel::Upper` and `Lower`), the Niño line above, the rain as bars against a dashed normal below. The
+  owner then removed, in turn, the dot on the picked week, the flag with its
+  figures and the banded column: each repeated what the plate beside the pair
+  and its caption already say, and read as a boundary that is not there. The owner chose this shape (option B of
   five, 16 October 2026) over one panel with two axes, a percent-of-normal
   ribbon, three strips with a readout, and a fact row first.
 - **The narrated animation** is not served; it arrives as a static asset of the

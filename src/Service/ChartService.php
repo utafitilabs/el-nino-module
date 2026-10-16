@@ -134,12 +134,11 @@ final class ChartService
 
     /**
      * THE LOWER PANEL OF THE TWO SIGNALS: rain over the area week by week as
-     * bars, against the normal for those dates as a dashed line over them,
-     * with the picked week banded.
+     * bars, against the normal for those dates as a dashed line over them.
      *
      * @param list<Week> $weeks
      */
-    public function weeklyRain(array $weeks, ?int $picked = null): AtlasChart
+    public function weeklyRain(array $weeks): AtlasChart
     {
         $rain = [];
         $normal = [];
@@ -160,21 +159,19 @@ final class ChartService
             unit: 'mm',
             axis: self::roundAxis($largest),
             legend: ChartLegend::Chips,
-            highlight: $picked,
             panel: ChartPanel::Lower,
         );
     }
 
     /**
      * THE UPPER PANEL OF THE TWO SIGNALS: the Pacific week by week on the
-     * same weeks as the rain, the El Niño range shaded, the picked week
-     * banded (the column is the one mark; a dot on the line read as a
-     * boundary), and no week names of its own — the
+     * same weeks as the rain, the El Niño range shaded, and no week names of
+     * its own — the
      * lower panel writes them once for both.
      *
      * @param list<Week> $weeks
      */
-    public function weeklyNino(array $weeks, ?int $picked = null): AtlasChart
+    public function weeklyNino(array $weeks): AtlasChart
     {
         $points = [];
         foreach ($weeks as $week) {
@@ -190,7 +187,6 @@ final class ChartService
             targetLabel: 'El Niño threshold',
             legend: ChartLegend::None,
             ranges: [new ChartRange(EnsoWords::THRESHOLD, null, \sprintf('EL NIÑO ≥ +%.1f °C', EnsoWords::THRESHOLD), swatch: PlatePalette::FAIL)],
-            highlight: $picked,
             panel: ChartPanel::Upper,
         );
     }
