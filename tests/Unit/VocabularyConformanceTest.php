@@ -37,7 +37,7 @@ final class VocabularyConformanceTest extends VocabularyConformanceTestCase
     /** @return list<string> */
     protected static function ownStylesheets(): array
     {
-        return ['el-nino.css'];
+        return ['el-nino.css', 'configure.css'];
     }
 
     /** @return list<string> */

@@ -18,6 +18,7 @@ use Uhifadhi\Bundle\AreaBundle\Overview\MapLayerProviderInterface;
 use Uhifadhi\Bundle\AreaBundle\Overview\NowTileProviderInterface;
 use Uhifadhi\Bundle\AreaBundle\Repository\AreaOfInterestRepository;
 use Uhifadhi\Bundle\AtlasBundle\Map\MapBuilderInterface;
+use Uhifadhi\Bundle\ShellBundle\Contract\StylesheetSourceInterface;
 use Uhifadhi\Contracts\Access\ConcernSourceInterface;
 use Uhifadhi\Contracts\Shell\ConfigurationSectionsInterface;
 use Uhifadhi\Contracts\Shell\ModuleTabsInterface;
@@ -39,6 +40,7 @@ use Uhifadhi\ElNino\Service\WatchService;
 use Uhifadhi\ElNino\Service\WeeksService;
 use Uhifadhi\ElNino\Shell\ElNinoConfigurationSections;
 use Uhifadhi\ElNino\Shell\ElNinoModuleTabs;
+use Uhifadhi\ElNino\Shell\ElNinoStylesheets;
 use Uhifadhi\ElNino\Twig\ElNinoExtension;
 
 /*
@@ -116,6 +118,9 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set('el_nino.shell.tabs', ElNinoModuleTabs::class)
         ->tag(ModuleTabsInterface::TAG);
+
+    $services->set('el_nino.shell.stylesheets', ElNinoStylesheets::class)
+        ->tag(StylesheetSourceInterface::TAG);
 
     $services->set('el_nino.shell.configuration', ElNinoConfigurationSections::class)
         ->args([

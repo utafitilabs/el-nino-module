@@ -1,0 +1,18 @@
+/* The El Niño watch's configure section — the producer, the token, the words.
+   Linked on the shell's configure page through the shell's stylesheet source,
+   because that page is the shell's and carries only the shell's sheet plus the
+   sheets a module registers. Every class is en-prefixed; colours are the
+   shell's tokens. The watch's own screens link el-nino.css instead. */
+
+/* ---- the configure section ------------------------------------------------- */
+.en-section { margin-bottom: 20px; }
+/* A card that follows a form's action row: the row ends on a hairline, so the
+   next card keeps the same distance below it that a card keeps above it. */
+.en-section-after { margin-top: 28px; }
+.en-field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.en-field .use { margin: 0; }
+.en-field textarea.fld { min-height: 96px; resize: vertical; }
+.en-token {
+    margin: 4px 0 12px; padding: 12px 14px; border: 1px dashed color-mix(in srgb, rgb(var(--c-acc)) 55%, transparent);
+    border-radius: 10px; background: rgb(var(--c-p2)); color: rgb(var(--c-tx)); font-size: 12.5px; overflow-wrap: anywhere; white-space: pre-wrap;
+}

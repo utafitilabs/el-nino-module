@@ -48,6 +48,13 @@ final class UhifadhiElNinoBundle extends AbstractBundle
     /** The module's own sheet, under the path AssetMapper gives a bundle's public/ directory. */
     public const string STYLESHEET = 'bundles/uhifadhielnino/el-nino.css';
 
+    /**
+     * The configure section's sheet, linked on every page through the shell's
+     * stylesheet source: the configure page is the shell's, and a module's
+     * section on it can only be dressed by a sheet the shell was told about.
+     */
+    public const string CONFIGURE_STYLESHEET = 'bundles/uhifadhielnino/configure.css';
+
     /** The npm-style form of the package name, which is what Flex keys controllers.json by. */
     public const string ASSET_NAMESPACE = '@uhifadhi/el-nino-module';
 
