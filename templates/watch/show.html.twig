@@ -30,7 +30,7 @@
     <div class="f"><span class="k">Rain window</span><span class="v">{% if bulletin.rainStart and bulletin.rainEnd %}<time datetime="{{ bulletin.rainStart|date('c') }}" data-localtime-format="date">{{ bulletin.rainStart|date('Y-m-d') }}</time> → <time datetime="{{ bulletin.rainEnd|date('c') }}" data-localtime-format="date">{{ bulletin.rainEnd|date('Y-m-d') }}</time>{% else %}–{% endif %}<em>{{ bulletin.rainDays }} days, CHIRPS prelim</em></span></div>
     <div class="f"><span class="k">Forecast</span><span class="v">{{ outlook ? outlook.issued : 'not read' }}<em>IRI</em></span></div>
     <span class="sp"></span>
-    <div class="f"><span class="k">Bulletin built</span><span class="v"><time datetime="{{ bulletin.builtAt|date('c') }}" data-localtime-format="stamp">{{ bulletin.builtAt|date('j M')|lower }} · {{ bulletin.builtAt|date('H:i') }}</time><em>{{ bulletin.producerSlug ?? 'producer' }}</em></span></div>
+    <div class="f"><span class="k">Rebuilt</span><span class="v">every Monday<em>built {{ bulletin.builtUtcLabel }} · {{ bulletin.producerSlug ?? 'producer' }}</em></span></div>
 </div>
 
 <div class="grid g4">

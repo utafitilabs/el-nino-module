@@ -68,6 +68,7 @@ final class WatchPagesTest extends WebTestCase
         self::assertSame(4, $crawler->filter('.kpi')->count(), 'four tiles');
         self::assertStringContainsString('94<em>%</em>', $html, 'the short rains chance');
         self::assertStringContainsString('139<em>% of normal</em>', $html);
+        self::assertStringContainsString('built 2026-10-12 05:07 UTC', $html, 'the producer\'s own stamp, in its own clock');
         self::assertStringContainsString('Salt Pans Village', $html, 'the cut-off register');
         self::assertStringContainsString('Two of the four El Niño seasons on record', $html, 'the area\'s own record');
         self::assertStringContainsString('https://example.test/analysis', $html);

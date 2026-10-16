@@ -189,6 +189,16 @@ class Bulletin
         return $this->builtAt;
     }
 
+    /**
+     * The producer's own stamp, as it wrote it: a UTC instant, printed as such
+     * rather than moved to the reader's zone, because a build is the producer's
+     * event and the design prints the producer's clock.
+     */
+    public function getBuiltUtcLabel(): string
+    {
+        return $this->builtAt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i').' UTC';
+    }
+
     public function getContract(): string
     {
         return $this->contract;
