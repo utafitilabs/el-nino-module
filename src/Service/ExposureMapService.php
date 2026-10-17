@@ -140,16 +140,23 @@ final class ExposureMapService
             tooltip: 'label',
             labels: false,
         ));
+        // ONE RAMP ROW, NOT FIVE SWATCHES THAT LOOK THE SAME: a continuous
+        // colour is read from its endpoints in words, as the design's legend
+        // reads "dry amber · 100 neutral · wet mint".
         if ($millimetres) {
-            $wettest = GridCells::wettest($gridMm);
-            foreach (range(GridCells::STEPS, 1) as $step) {
-                $map->addLegendItem(new LegendItem(label: self::stepLabel($step, $wettest), swatch: PlatePalette::ACCENT, group: self::GROUP_RAIN));
-            }
-            $map->addLegendItem(new LegendItem(label: 'no rain', swatch: PlatePalette::DIM, group: self::GROUP_RAIN));
+            $map->addLegendItem(new LegendItem(
+                label: \sprintf('mm summed over the window: 0 → %.1f mm', GridCells::wettest($gridMm)),
+                swatch: PlatePalette::ACCENT,
+                group: self::GROUP_RAIN,
+                ramp: [PlatePalette::DIM, PlatePalette::ACCENT],
+            ));
         } else {
-            foreach (RainBand::ordered() as $band) {
-                $map->addLegendItem(new LegendItem(label: $band->legendLabel($threshold), swatch: $band->swatch(), group: self::GROUP_RAIN));
-            }
+            $map->addLegendItem(new LegendItem(
+                label: \sprintf('%% of the normal for those dates: dry amber · 100 neutral · wet mint · ≥ %d %% a wet cell', $threshold),
+                swatch: PlatePalette::ACCENT,
+                group: self::GROUP_RAIN,
+                ramp: [PlatePalette::WARN, PlatePalette::DIM, PlatePalette::ACCENT],
+            ));
         }
         $run = $reading->run;
         if (null !== $run) {
@@ -339,11 +346,5 @@ final class ExposureMapService
     private static function stepOpacity(int $step): float
     {
         return 0 === $step ? 0.0 : 0.14 + 0.14 * $step;
-    }
-
-    /** "≤ 3.1 mm", "≤ 6.3 mm", … up to the wettest cell of the window. */
-    private static function stepLabel(int $step, float $wettest): string
-    {
-        return \sprintf('%s %.1f mm', GridCells::STEPS === $step ? 'up to' : '≤', $wettest * $step / GridCells::STEPS);
     }
 }

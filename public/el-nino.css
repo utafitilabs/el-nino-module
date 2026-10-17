@@ -51,6 +51,8 @@
 .en-circ-plate { --map-plate-height: 380px; margin-bottom: 20px; }
 .en-state-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
 .en-state-k { font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: rgb(var(--c-dim)); }
+/* THE STATE THAT IS ON wears the accent, as the design's toggles do: the shell styles `.btn` and `.btn.sm` but no `.on`. */
+.en-state-row .btn.on { color: rgb(var(--c-acc)); border-color: color-mix(in srgb, rgb(var(--c-acc)) 55%, transparent); background: color-mix(in srgb, rgb(var(--c-acc)) 14%, transparent); font-weight: 600; }
 .en-week-plate { --map-plate-height: 392px; }
 
 /* ---- the two signals: two panels on one axis, in one card ---------------- */
