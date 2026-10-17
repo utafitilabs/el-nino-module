@@ -36,7 +36,7 @@
         "symfony/twig-bundle": "^7.3 || ^8.0",
         "symfony/uid": "^7.3 || ^8.0",
         "symfony/ux-icons": "^3.4",
-        "uhifadhi/uhifadhi": "^0.1.28",
+        "uhifadhi/uhifadhi": "^0.1.29",
         "utafitilabs/postgis-bundle": "^0.1"
     },
     "autoload": {
